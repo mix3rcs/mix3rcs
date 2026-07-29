@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><link as="image" fetchpriority="high" href="./hero.jpg" rel="preload" type="image/jpeg"/>
+<meta content="mix3r — индивидуальное обучение Counter-Strike 2 для Faceit, Premier, MM и других форматов: демки, роли, тайминги, экономика и рост ELO." name="description"/>
+<meta content="#050505" name="theme-color"/>
+<title>mix3r — индивидуальное обучение CS2</title>
+<style>
+    :root {
+      --bg: #050505;
+      --bg-2: #090909;
+      --surface: #0c0c0c;
+      --surface-2: #111;
+      --text: #f5f5f3;
+      --muted: #aaa;
+      --line: rgba(255,255,255,.15);
+      --line-strong: rgba(255,255,255,.35);
+      --paper: #f2f2ef;
+      --ink: #090909;
+      --radius: 10px;
+      --container: 1320px;
+      --shadow: 0 18px 50px rgba(0,0,0,.32);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 75% 0%, rgba(255,255,255,.035), transparent 28%),
+        linear-gradient(180deg, #050505 0%, #080808 55%, #050505 100%);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button, input, textarea, select { font: inherit; }
+
+    .container {
+      width: min(calc(100% - 36px), var(--container));
+      margin-inline: auto;
+    }
+
+    .header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 100;
+      border-bottom: 1px solid transparent;
+      transition: .2s ease;
+    }
+
+    .header.scrolled {
+      background: rgba(5,5,5,.92);
+      border-color: var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-size: 24px;
+      font-weight: 1000;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    .button {
+      min-height: 46px;
+      padding: 0 18px;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-weight: 950;
+      cursor: pointer;
+      will-change: transform, box-shadow;
+      transition:
+        transform .28s cubic-bezier(.2,.8,.2,1),
+        background-color .28s ease,
+        color .28s ease,
+        border-color .28s ease,
+        box-shadow .32s ease;
+    }
+
+    .button::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      pointer-events: none;
+      background: linear-gradient(
+        110deg,
+        transparent 20%,
+        rgba(255,255,255,.08) 38%,
+        rgba(255,255,255,.52) 50%,
+        rgba(255,255,255,.08) 62%,
+        transparent 80%
+      );
+      transform: translateX(-145%);
+      transition: transform .72s cubic-bezier(.2,.75,.2,1);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,.72);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.12),
+        0 0 24px rgba(255,255,255,.28),
+        0 12px 30px rgba(0,0,0,.34);
+      outline: none;
+    }
+
+    .button:hover::after,
+    .button:focus-visible::after {
+      transform: translateX(145%);
+    }
+
+    .button:active {
+      transform: translateY(-1px) scale(.985);
+      box-shadow: 0 0 16px rgba(255,255,255,.18);
+    }
+
+    .button-primary {
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    .button-primary:hover,
+    .button-primary:focus-visible {
+      background: #fff;
+    }
+
+    .button-secondary {
+      color: var(--text);
+      background: transparent;
+      border-color: var(--line);
+    }
+
+    .button-secondary:hover,
+    .button-secondary:focus-visible {
+      background: rgba(255,255,255,.085);
+    }
+
+    .menu-button {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--text);
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .hero {
+      min-height: 112svh;
+      padding: 118px 0 76px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .78fr) minmax(500px, 1.22fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      padding: 38px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow,
+    .section-title {
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(56px, 5.6vw, 86px);
+      line-height: .86;
+      letter-spacing: -.065em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(29px, 4vw, 52px);
+      line-height: 1;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin-bottom: 9px;
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .lead {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(17px, 1.75vw, 20px);
+    }
+
+    .hero-actions,
+    .inline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .hero-media {
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: 1fr 170px;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .hero-photo-frame {
+      min-width: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #080808;
+    }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Нейтральное наведение без белого свечения */
+    .photo-hover {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition:
+        transform .46s cubic-bezier(.2,.7,.2,1),
+        border-color .46s ease;
+    }
+
+    .photo-hover img {
+      transition:
+        transform .52s cubic-bezier(.2,.7,.2,1),
+        filter .52s ease;
+      will-change: transform, filter;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .photo-hover:hover,
+      .photo-hover:focus-visible {
+        z-index: 3;
+        transform: translateY(-3px);
+        border-color: rgba(255,255,255,.28);
+      }
+
+      .photo-hover:hover img,
+      .photo-hover:focus-visible img {
+        transform: scale(1.026);
+        filter: brightness(1.025) contrast(1.015);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .photo-hover,
+      .photo-hover img {
+        transition-duration: .01ms !important;
+      }
+    }
+
+    .hero-stats {
+      display: grid;
+      align-content: center;
+      padding: 0 16px;
+      background: #080808;
+    }
+
+    .hero-stat {
+      padding: 24px 6px;
+      text-align: center;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .hero-stat:last-child { border-bottom: 0; }
+    .hero-stat strong { display: block; font-size: 31px; line-height: 1; }
+    .hero-stat span { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+
+    .section {
+      padding: 94px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 26px;
+      font-size: clamp(24px, 3vw, 36px);
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line-strong);
+    }
+
+    .elo-overview {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.012);
+    }
+
+    .elo-overview-item {
+      min-height: 220px;
+      padding: 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .elo-overview-item:last-child { border-right: 0; }
+
+    .elo-overview-item span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .elo-overview-item strong {
+      display: block;
+      margin: 10px 0 12px;
+      font-size: clamp(42px, 6vw, 74px);
+      line-height: .92;
+      letter-spacing: -.045em;
+    }
+
+    .elo-overview-item p {
+      max-width: 480px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.015);
+      box-shadow: var(--shadow);
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: minmax(300px, .9fr) minmax(360px, 1.1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .fact-list {
+      padding: 24px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .fact {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 12px;
+      align-items: start;
+      color: var(--muted);
+    }
+
+    .fact-icon {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .achievement-photo {
+      width: 100%;
+      height: 100%;
+      min-height: 440px;
+      object-fit: cover;
+    }
+
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .case-card {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.012);
+    }
+
+    .case-media {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .case-shot {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #080808;
+    }
+
+    .case-shot img {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      object-fit: contain;
+      object-position: center;
+      transition: transform .2s ease, filter .2s ease;
+    }
+
+    .case-image-button {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 0;
+      color: var(--text);
+      background: #050505;
+      cursor: zoom-in;
+      text-align: left;
+    }
+
+    .case-image-button:focus-visible {
+      outline: 2px solid var(--paper);
+      outline-offset: -2px;
+    }
+
+    .case-zoom {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,.3);
+      background: rgba(0,0,0,.78);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(0,0,0,.94);
+      backdrop-filter: blur(8px);
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-dialog {
+      width: min(96vw, 1500px);
+      max-height: 94vh;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      border: 1px solid var(--line-strong);
+      background: #050505;
+      box-shadow: 0 30px 100px rgba(0,0,0,.65);
+    }
+
+    .lightbox-image-wrap {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      overflow: auto;
+      background: #000;
+    }
+
+    .lightbox-image {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: calc(94vh - 72px);
+      object-fit: contain;
+    }
+
+    .lightbox-bar {
+      min-height: 62px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .lightbox-original {
+      color: var(--text);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 301;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.38);
+      background: #090909;
+      color: #fff;
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    body.lightbox-lock { overflow: hidden; }
+
+    .case-shot figcaption {
+      padding: 8px 10px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .case-body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 120px;
+      gap: 16px;
+      align-items: stretch;
+      flex: 1;
+    }
+
+    .case-copy p,
+    .case-copy li { color: var(--muted); }
+
+    .case-copy ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    .case-result {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .elo-box {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      border: 1px solid var(--line-strong);
+      background: #090909;
+    }
+
+    .elo-box span { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+    .elo-box strong { display: block; margin-top: 4px; font-size: 27px; line-height: 1; }
+
+    .pricing-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(340px, .85fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .price-card {
+      min-height: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--line-strong);
+      background: #080808;
+      position: relative;
+    }
+
+    .price-card h3 { text-align: center; text-transform: uppercase; }
+    .price-card .duration { text-align: center; color: var(--muted); font-size: 12px; text-transform: uppercase; }
+    .price { margin: 20px 0; text-align: center; font-size: 38px; font-weight: 1000; }
+
+    .discount {
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 12px;
+      font-weight: 1000;
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--text);
+      font-weight: 900;
+    }
+
+    .payment-line {
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      text-align: center;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .form-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: #080808;
+    }
+
+    .form-card p { color: var(--muted); }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .field { display: grid; gap: 7px; }
+    .field-full { grid-column: 1 / -1; }
+    .field label { color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      color: var(--text);
+      background: #090909;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-color: var(--line-strong); }
+    .field textarea { min-height: 108px; resize: vertical; }
+
+    .form-status {
+      min-height: 22px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+
+    .learning-layout {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 36px;
+      align-items: start;
+      margin-top: 26px;
+    }
+
+    .learning-column {
+      position: relative;
+      padding: 0;
+    }
+
+    .learning-column-title {
+      margin: 0 0 22px;
+      color: var(--accent-lime);
+      font-size: clamp(22px, 2vw, 34px);
+      line-height: 1;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: -.03em;
+    }
+
+    .learning-bullets {
+      display: grid;
+      gap: 18px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .learning-bullets li {
+      position: relative;
+      padding-left: 26px;
+      color: var(--text);
+      font-size: clamp(16px, 1.45vw, 18px);
+      line-height: 1.55;
+    }
+
+    .learning-bullets li::before {
+      content: "▲";
+      position: absolute;
+      left: 0;
+      top: .18em;
+      color: var(--accent-lime);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .learning-bullets strong {
+      color: #fff;
+      font-weight: 950;
+    }
+
+    .learning-bottom {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 34px;
+    }
+
+    .learning-mini {
+      padding: 22px 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(255,255,255,.02), rgba(255,255,255,.008));
+      transition: transform .28s ease, border-color .28s ease, background-color .28s ease;
+    }
+
+    .learning-mini:nth-child(1) { border-top: 2px solid var(--accent-cyan); }
+    .learning-mini:nth-child(2) { border-top: 2px solid var(--accent-orange); }
+    .learning-mini:nth-child(3) { border-top: 2px solid var(--accent-lime); }
+
+    .learning-mini-title {
+      display: block;
+      margin-bottom: 10px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .learning-mini p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+
+    .creator-note {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .creator-note .container {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .creator-note span {
+      color: #777;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: lowercase;
+    }
+
+    footer {
+      padding: 22px 0 34px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-creator {
+      color: #777;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: lowercase;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .reveal.reveal-pending {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .62s ease, transform .62s ease;
+    }
+
+    .reveal.reveal-pending.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    img.image-load-error {
+      min-height: 180px;
+      object-fit: contain !important;
+      background: #0b0b0b;
+      color: #c8ff5a;
+    }
+
+    @media (max-width: 1120px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-media { min-height: 540px; }
+      .trust-grid { grid-template-columns: 1fr 1fr; }
+      .pricing-layout { grid-template-columns: 1fr; }
+      .learning-layout { grid-template-columns: 1fr; }
+      .learning-bottom { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        position: absolute;
+        top: 70px;
+        left: 18px;
+        right: 18px;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        padding: 18px;
+        border: 1px solid var(--line);
+        background: rgba(6,6,6,.98);
+      }
+      .nav-links.open { display: flex; }
+      .menu-button { display: grid; place-items: center; }
+      .nav > .button-primary { display: none; }
+      .case-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; }
+      .learning-layout { gap: 26px; }
+      .learning-bottom { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .hero { padding-top: 94px; }
+      .hero-media { grid-template-columns: 1fr; }
+      .hero-photo { min-height: 430px; }
+      .hero-stats { grid-template-columns: repeat(3, 1fr); padding: 0; }
+      .hero-stat { padding: 18px 8px; border-right: 1px solid var(--line); border-bottom: 0; }
+      .hero-stat:last-child { border-right: 0; }
+      .hero-stat strong { font-size: 23px; }
+      .trust-grid { grid-template-columns: 1fr; }
+      .case-media { grid-template-columns: 1fr; }
+      .case-body { grid-template-columns: 1fr; }
+      .case-result { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .field-grid { grid-template-columns: 1fr; }
+      .field-full { grid-column: auto; }
+      .learning-column-title { font-size: 26px; }
+      .learning-bullets { gap: 15px; }
+      .learning-bullets li { font-size: 15px; }
+      .learning-mini { padding: 20px; }
+      .section { padding: 74px 0; }
+      .elo-overview { grid-template-columns: 1fr; }
+      .elo-overview-item {
+        min-height: 180px;
+        padding: 28px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .elo-overview-item:last-child { border-bottom: 0; }
+    }
+
+
+    /* Native cursor stays visible; this canvas adds a smooth white trailing line. */
+    .cursor-line-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+
+    .cursor-line-canvas.is-visible { opacity: 1; }
+
+    @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+      .cursor-line-canvas { display: none !important; }
+    }
+
+
+    /* COLOR ACCENTS V3 — тёмная база с яркими, но контролируемыми акцентами */
+    :root {
+      --accent-lime: #c8ff5a;
+      --accent-cyan: #58d7ff;
+      --accent-violet: #a970ff;
+      --accent-orange: #ff8a4c;
+      --accent-pink: #ff5e8a;
+    }
+
+    ::selection {
+      color: #050505;
+      background: var(--accent-lime);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 8% 10%, rgba(200,255,90,.055), transparent 26%),
+        radial-gradient(circle at 92% 28%, rgba(88,215,255,.06), transparent 30%),
+        radial-gradient(circle at 46% 78%, rgba(169,112,255,.045), transparent 34%),
+        linear-gradient(180deg, #050505 0%, #080808 55%, #050505 100%);
+    }
+
+    .brand {
+      color: var(--accent-lime);
+      text-shadow: 0 0 24px rgba(200,255,90,.12);
+    }
+
+    .eyebrow { color: var(--accent-lime); }
+
+    h1 {
+      color: #fff;
+      background: linear-gradient(100deg, #fff 0%, #fff 58%, var(--accent-cyan) 82%, var(--accent-violet) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links a.active,
+    .nav-links a:hover { color: var(--accent-cyan); }
+
+    .button-primary {
+      color: #050505;
+      background: linear-gradient(100deg, var(--accent-lime), var(--accent-cyan));
+      border-color: rgba(255,255,255,.2);
+    }
+
+    .button-primary:hover,
+    .button-primary:focus-visible {
+      background: linear-gradient(100deg, #dcff8a, #8fe6ff);
+      box-shadow: 0 0 28px rgba(88,215,255,.24), 0 14px 34px rgba(0,0,0,.35);
+    }
+
+    .button-secondary:hover,
+    .button-secondary:focus-visible {
+      color: #fff;
+      border-color: var(--accent-cyan);
+      background: rgba(88,215,255,.075);
+      box-shadow: 0 0 24px rgba(88,215,255,.16), 0 12px 30px rgba(0,0,0,.34);
+    }
+
+    .hero-media {
+      border-top: 2px solid var(--accent-cyan);
+      border-bottom: 2px solid var(--accent-violet);
+    }
+
+    .hero-stat:nth-child(1) strong { color: var(--accent-lime); }
+    .hero-stat:nth-child(2) strong { color: var(--accent-cyan); }
+    .hero-stat:nth-child(3) strong { color: var(--accent-violet); }
+    .hero-stat:nth-child(4) strong { color: var(--accent-orange); }
+
+    .section-title::after {
+      height: 2px;
+      opacity: .72;
+    }
+
+    #chapter-2 .section-title::after { background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink), transparent); }
+    #chapter-3 .section-title::after { background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan), transparent); }
+    #chapter-4 .section-title::after { background: linear-gradient(90deg, var(--accent-lime), var(--accent-orange), transparent); }
+    #chapter-5 .section-title::after { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet), transparent); }
+
+    .fact:nth-child(4n + 1) .fact-icon { color: var(--accent-lime); border-color: rgba(200,255,90,.65); background: rgba(200,255,90,.055); }
+    .fact:nth-child(4n + 2) .fact-icon { color: var(--accent-cyan); border-color: rgba(88,215,255,.65); background: rgba(88,215,255,.055); }
+    .fact:nth-child(4n + 3) .fact-icon { color: var(--accent-violet); border-color: rgba(169,112,255,.65); background: rgba(169,112,255,.055); }
+    .fact:nth-child(4n) .fact-icon { color: var(--accent-orange); border-color: rgba(255,138,76,.65); background: rgba(255,138,76,.055); }
+
+    .elo-overview-item:first-child { border-top: 2px solid var(--accent-orange); }
+    .elo-overview-item:last-child { border-top: 2px solid var(--accent-cyan); }
+    .elo-overview-item:first-child strong { color: var(--accent-orange); }
+    .elo-overview-item:last-child strong { color: var(--accent-cyan); }
+
+    .case-card:nth-child(1) { border-top: 2px solid var(--accent-violet); }
+    .case-card:nth-child(2) { border-top: 2px solid var(--accent-cyan); }
+    .case-card:nth-child(1) h3 { color: var(--accent-violet); }
+    .case-card:nth-child(2) h3 { color: var(--accent-cyan); }
+
+    .price-card:nth-child(1) { border-top: 2px solid var(--accent-cyan); }
+    .price-card:nth-child(2) { border-top: 2px solid var(--accent-lime); }
+    .price-card:nth-child(3) { border-top: 2px solid var(--accent-orange); }
+    .price-card:nth-child(1) .price { color: var(--accent-cyan); }
+    .price-card:nth-child(2) .price { color: var(--accent-lime); }
+    .price-card:nth-child(3) .price { color: var(--accent-orange); }
+    .discount { background: var(--accent-lime); }
+    .list li::before { color: var(--accent-lime); }
+
+    .learning-mini,
+    .case-card,
+    .price-card,
+    .panel {
+      transition: transform .28s ease, border-color .28s ease, background-color .28s ease;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .learning-mini:hover,
+      .case-card:hover,
+      .price-card:hover {
+        transform: translateY(-3px);
+        background: rgba(255,255,255,.026);
+        border-color: rgba(88,215,255,.32);
+      }
+    }
+
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(88,215,255,.08);
+      outline: none;
+    }
+
+    .creator-note span,
+    .footer-creator { color: rgba(88,215,255,.62); }
+
+  
+
+    /* Надёжное отображение изображений на любых экранах */
+    .case-image-button { aspect-ratio: auto; min-height: 0; }
+    .case-shot img { width: 100%; height: auto; aspect-ratio: auto; object-fit: contain; display: block; }
+    .hero-photo, .achievement-photo { display: block; }
+
+    @media (max-width: 1180px) {
+      .case-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<canvas aria-hidden="true" class="cursor-line-canvas" id="cursorLineCanvas"></canvas>
+<header class="header" id="header">
+<div class="container nav">
+<a class="brand" href="#chapter-1">MIX3R</a>
+<nav aria-label="Главная навигация" class="nav-links" id="navLinks">
+<a href="#chapter-1">Кто я такой</a>
+<a href="#chapter-2">Почему мне стоит верить</a>
+<a href="#chapter-3">Успехи учеников</a>
+<a href="#chapter-4">Формат и цены</a>
+<a href="#chapter-5">Как проходит обучение</a>
+</nav>
+<a class="button button-primary" href="#application">Написать мне ↗</a>
+<button aria-expanded="false" aria-label="Открыть меню" class="menu-button" id="menuButton">☰</button>
+</div>
+</header>
+<main>
+<section class="hero" id="chapter-1">
+<div class="container hero-grid">
+<div class="hero-copy reveal">
+<div class="eyebrow">Кто я такой</div>
+<h1>MIX3R</h1>
+<p class="lead">Привет, меня зовут Максим. Мой ник — mix3r.</p>
+<p class="lead">В Counter-Strike больше 10 лет, из них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и работаю с игроками из Faceit, Premier, MM и других форматов.</p>
+<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и расти в рейтинге.</p>
+<div class="hero-actions">
+<a class="button button-primary" href="https://t.me/mixertren" rel="noopener" target="_blank">Написать мне в Telegram ↗</a>
+</div>
+</div>
+<div class="hero-media reveal">
+<div class="hero-photo-frame photo-hover">
+<img alt="Я, mix3r, за игровым компьютером" class="hero-photo" decoding="async" fetchpriority="high" height="653" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./hero.jpg" width="986"/>
+</div>
+<div class="hero-stats">
+<div class="hero-stat"><strong>4400</strong><span>пиковое ELO в CS:GO</span></div>
+<div class="hero-stat"><strong>3500</strong><span>пиковое ELO в CS2</span></div>
+<div class="hero-stat"><strong>12 000+</strong><span>часов в CS</span></div>
+<div class="hero-stat"><strong>4 000$+</strong><span>призовых за год</span></div>
+</div>
+</div>
+</div>
+</section>
+<section class="section" id="chapter-2">
+<div class="container">
+<h2 class="section-title reveal">Почему мне стоит верить</h2>
+<div class="trust-grid">
+<div class="fact-list panel reveal">
+<div class="fact"><span class="fact-icon">1</span><span>Пиковое ELO в CS:GO — 4400.</span></div>
+<div class="fact"><span class="fact-icon">2</span><span>Пиковое ELO в CS2 — 3500.</span></div>
+<div class="fact"><span class="fact-icon">3</span><span>Более 12 000 часов в CS:GO и CS2.</span></div>
+<div class="fact"><span class="fact-icon">4</span><span>Матч против команды из топ-40 мира на LAN-ивенте.</span></div>
+<div class="fact"><span class="fact-icon">5</span><span>Победа в главном полупрофессиональном турнире России в 2021 году.</span></div>
+<div class="fact"><span class="fact-icon">6</span><span>Участие в Red Bull Flick LAN 2x2.</span></div>
+<div class="fact"><span class="fact-icon">7</span><span>Четыре сезона в ESEA Main и два выхода в плей-офф.</span></div>
+<div class="fact"><span class="fact-icon">8</span><span>Более 4 000$ призовых за один год.</span></div>
+</div>
+<div class="panel photo-hover reveal">
+<img alt="Я с призовым чеком на турнире" class="achievement-photo" decoding="async" fetchpriority="low" height="960" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./achievement.jpg" width="1280"/>
+</div>
+</div>
+<div aria-label="Мои пиковые рейтинги" class="elo-overview reveal">
+<article class="elo-overview-item">
+<span>Counter-Strike: Global Offensive</span>
+<strong>4400 ELO</strong>
+<p>Максимальный рейтинг в CS:GO. Этот опыт сформировал глубокое понимание соревновательной игры, ролей и решений на высоком уровне.</p>
+</article>
+<article class="elo-overview-item">
+<span>Counter-Strike 2</span>
+<strong>3500 ELO</strong>
+<p>Пиковый рейтинг в CS2. На занятиях используются актуальные механики, тайминги и принципы игры текущей версии Counter-Strike.</p>
+</article>
+</div>
+<div class="inline-actions reveal">
+<a class="button button-secondary" href="https://www.youtube.com/watch?v=A06Lpoe9f9A" rel="noopener" target="_blank">Матч против топ-40 команды мира на LAN</a>
+<a class="button button-secondary" href="https://vkvideo.ru/video-174875268_456239466?pl=-174875268_1" rel="noopener" target="_blank">Red Bull Flick LAN с моим участием</a>
+</div>
+</div>
+</section>
+<section class="section" id="chapter-3">
+<div class="container">
+<h2 class="section-title reveal">Успехи моих учеников</h2>
+<div class="case-grid">
+<article class="case-card reveal">
+<div class="case-media">
+<figure class="case-shot">
+<button aria-label="Открыть изображение «Downlowd — до обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="Downlowd — до обучения" data-lightbox-src="./downlowd-before.jpg" type="button">
+<img alt="Статистика Downlowd до обучения" decoding="async" fetchpriority="low" height="602" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./downlowd-before.jpg" width="1150"/>
+<span class="case-zoom">Открыть</span>
+</button>
+<figcaption>До обучения</figcaption>
+</figure>
+<figure class="case-shot">
+<button aria-label="Открыть изображение «Downlowd — после обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="Downlowd — после обучения" data-lightbox-src="./downlowd-after.jpg" type="button">
+<img alt="Статистика Downlowd после обучения" decoding="async" fetchpriority="low" height="752" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./downlowd-after.jpg" width="1137"/>
+<span class="case-zoom">Открыть</span>
+</button>
+<figcaption>После обучения</figcaption>
+</figure>
+</div>
+<div class="case-body">
+<div class="case-copy">
+<h3>DOWNLOWD <small>(15 тренировок)</small></h3>
+<p><strong>Начали — июль 2025.</strong><br/>700–900 ELO, хотел апнуть 8 уровень, засиделся на одном рейтинге и не мог стабильно влиять на игру.</p>
+<p><strong>Что я сделал:</strong></p>
+<ul>
+<li>Пересадил его с рифлы на AWP.</li>
+<li>Научил дефолтам и дебютам на каждой карте.</li>
+<li>Проработал индивидуальные решения, движение и игру на Faceit.</li>
+</ul>
+<p><strong>Результат:</strong> к октябрю 2025 года он апнул 1530 ELO и выполнил цель.</p>
+</div>
+<div class="case-result">
+<div class="elo-box"><span>до</span><strong>~800</strong><span>ELO</span></div>
+<div class="elo-box"><span>после</span><strong>1530</strong><span>ELO</span></div>
+</div>
+</div>
+</article>
+<article class="case-card reveal">
+<div class="case-media">
+<figure class="case-shot">
+<button aria-label="Открыть изображение «YGENIUS — до обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="YGENIUS — до обучения" data-lightbox-src="./genius-before.jpg" type="button">
+<img alt="Статистика YGENIUS до обучения" decoding="async" fetchpriority="low" height="839" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./genius-before.jpg" width="1080"/>
+<span class="case-zoom">Открыть</span>
+</button>
+<figcaption>До обучения</figcaption>
+</figure>
+<figure class="case-shot">
+<button aria-label="Открыть изображение «YGENIUS — после обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="YGENIUS — после обучения" data-lightbox-src="./genius-after.jpg" type="button">
+<img alt="Статистика YGENIUS после обучения" decoding="async" fetchpriority="low" height="774" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./genius-after.jpg" width="1066"/>
+<span class="case-zoom">Открыть</span>
+</button>
+<figcaption>После обучения</figcaption>
+</figure>
+</div>
+<div class="case-body">
+<div class="case-copy">
+<h3>YGENIUS <small>(10 тренировок)</small></h3>
+<p><strong>Начали — август 2025.</strong><br/>Качели на 1800 ELO: не мог закрепиться выше 2000, хорошие матчи постоянно сменялись провальными.</p>
+<p><strong>Что я сделал:</strong></p>
+<ul>
+<li>Подобрал роль и проработал старты.</li>
+<li>Разобрал ошибки по демкам и подключил совместные игры.</li>
+<li>Объяснил теорию CS, движение по карте и правильную игру на Faceit.</li>
+</ul>
+<p><strong>Результат:</strong> к декабрю 2025 года он закрепился на 2500 ELO с хорошей статистикой.</p>
+</div>
+<div class="case-result">
+<div class="elo-box"><span>до</span><strong>~1800</strong><span>ELO</span></div>
+<div class="elo-box"><span>после</span><strong>2500+</strong><span>ELO</span></div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="section" id="chapter-4">
+<div class="container">
+<h2 class="section-title reveal">Формат и цены</h2>
+<div class="pricing-layout">
+<div>
+<div class="price-grid">
+<article class="price-card reveal">
+<h3>Разовая тренировка</h3>
+<div class="duration">60 минут</div>
+<div class="price">1 500 ₽</div>
+<ul class="list">
+<li>Подойдёт для первого знакомства.</li>
+<li>Разберём проблему по твоему запросу.</li>
+<li>Проверю твою игру на роли.</li>
+<li>Покажу, над чем и как работать.</li>
+</ul>
+</article>
+<article class="price-card reveal">
+<span class="discount">−10%</span>
+<h3>Краткосрочное обучение</h3>
+<div class="duration">4 занятия</div>
+<div class="price">5 400 ₽</div>
+<ul class="list">
+<li>Записи всех занятий.</li>
+<li>Постоянная связь в чате.</li>
+<li>Ответы на вопросы по игре.</li>
+<li>Каждое занятие — 60 минут.</li>
+</ul>
+</article>
+<article class="price-card reveal">
+<span class="discount">−15%</span>
+<h3>Долгосрочное обучение</h3>
+<div class="duration">10 занятий</div>
+<div class="price">12 750 ₽</div>
+<ul class="list">
+<li>Всё из краткосрочного пакета.</li>
+<li>Приоритетная запись.</li>
+<li>Индивидуальные гайды под тебя.</li>
+<li>Каждое занятие — 60 минут.</li>
+</ul>
+</article>
+</div>
+<div class="payment-line reveal">Оплата: TG-кошелёк / крипта / карта РФ / Boosty</div>
+</div>
+<article class="form-card reveal" id="application">
+<h3>Хочешь записаться?</h3>
+<p>Заполни заявку — после нажатия откроется мой чат <strong>@mixertren</strong>, а текст уже будет вставлен в поле сообщения.</p>
+<form id="leadForm">
+<div class="field-grid">
+<div class="field">
+<label for="name">Твой ник</label>
+<input id="name" name="name" placeholder="Например, simple" required="" type="text"/>
+</div>
+<div class="field">
+<label for="elo">Текущее ELO</label>
+<input id="elo" name="elo" placeholder="Например, 1500" required="" type="text"/>
+</div>
+<div class="field field-full">
+<label for="format">Формат</label>
+<select id="format" name="format" required="">
+<option value="">Выбери формат</option>
+<option>Разовая тренировка — 1500 ₽</option>
+<option>4 занятия — 5400 ₽</option>
+<option>10 занятий — 12750 ₽</option>
+<option>Хочу обсудить формат</option>
+</select>
+</div>
+<div class="field field-full">
+<label for="goal">Что хочешь улучшить?</label>
+<textarea id="goal" name="goal" placeholder="Опиши проблему, цель и текущую роль" required=""></textarea>
+</div>
+<div class="field field-full">
+<label for="demo">Добавь ссылку на Faceit / дополнительная информация</label>
+<textarea id="demo" name="demo" placeholder="Ссылка на профиль Faceit или комментарий"></textarea>
+</div>
+</div>
+<div class="inline-actions">
+<button class="button button-primary" type="submit">Отправить в Telegram ↗</button>
+</div>
+<div class="form-status" id="formStatus"></div>
+</form>
+</article>
+</div>
+</div>
+</section>
+<section class="section" id="chapter-5">
+<div class="container">
+<h2 class="section-title reveal">Как проходит обучение</h2>
+<div class="learning-layout reveal">
+<article class="learning-column">
+<h3 class="learning-column-title">Формат под твою цель</h3>
+<ul class="learning-bullets">
+<li><strong>Конкретный разбор</strong> — разбираем конкретную проблему: стрельбу, экономику, тайминги, позиции или принятие решений.</li>
+<li><strong>Обучение с нуля</strong> — выстраиваем понимание игры от базы до более сложных игровых ситуаций.</li>
+<li><strong>Совместная игра</strong> — играем вместе на Faceit, Premier или MM и разбираем решения прямо по ходу матча.</li>
+<li><strong>Просмотр игры вживую</strong> — смотрим твой матч или экран и сразу исправляем ошибки по ситуации.</li>
+<li><strong>Групповые тренировки</strong> — тренировочный матч под наблюдением с акцентом на коммуникацию и тимплей.</li>
+<li><strong>Подготовка к занятию</strong> — достаточно подготовить вопросы, демку матча или ссылку на профиль.</li>
+</ul>
+</article>
+<article class="learning-column">
+<h3 class="learning-column-title">Чему ты научишься?</h3>
+<ul class="learning-bullets">
+<li><strong>Играть стабильнее</strong> — лучше понимать, что делать в каждом отрезке раунда и почему.</li>
+<li><strong>Давать больше фрагов</strong> — за счёт правильных позиций, таймингов, стрельбы и выбора дуэлей.</li>
+<li><strong>Читать игру</strong> — видеть экономику, структуру раунда, движения соперника и ключевые риски.</li>
+<li><strong>Двигаться по карте</strong> — использовать геометрию, тайминги, дефолты и пространство команды.</li>
+<li><strong>Играть правильно</strong> — на Faceit, Premier и MM без хаоса, лишней суеты и случайных решений.</li>
+<li><strong>Тренироваться по плану</strong> — после занятия будет ясно, над чем работать дальше и как это делать.</li>
+</ul>
+</article>
+</div>
+<div class="learning-bottom reveal">
+<article class="learning-mini">
+<span class="learning-mini-title">Где проходит обучение?</span>
+<p>Discord, Яндекс Телемост или Google Meet — выбираем удобный формат связи.</p>
+</article>
+<article class="learning-mini">
+<span class="learning-mini-title">Уровень игроков</span>
+<p>Индивидуальное обучение рассчитано на игроков до 2800 ELO.</p>
+</article>
+<article class="learning-mini">
+<span class="learning-mini-title">Что в результате?</span>
+<p>После занятия остаются конкретные правки, приоритеты и понятный следующий шаг.</p>
+</article>
+</div>
+</div>
+</section>
+<div aria-label="Авторская отметка" class="creator-note">
+<div class="container"><span>ccorb1</span></div>
+</div>
+</main>
+<div aria-hidden="true" aria-label="Просмотр статистики ученика" aria-modal="true" class="lightbox" id="imageLightbox" role="dialog">
+<button aria-label="Закрыть изображение" class="lightbox-close" id="lightboxClose" type="button">×</button>
+<div class="lightbox-dialog" role="document">
+<div class="lightbox-image-wrap">
+<img alt="" class="lightbox-image" decoding="async" id="lightboxImage" src=""/>
+</div>
+<div class="lightbox-bar">
+<span id="lightboxCaption"></span>
+<a class="lightbox-original" href="#" id="lightboxOriginal" rel="noopener" target="_blank">Открыть оригинал ↗</a>
+</div>
+</div>
+</div>
+<footer>
+<div class="container footer-row">
+<span>© <span id="year"></span> mix3r. Индивидуальное обучение Counter-Strike 2.</span>
+<a href="https://t.me/mixertren" rel="noopener" target="_blank">@mixertren</a>
+<span class="footer-creator">ccorb1</span>
+</div>
+</footer>
+<script>
+(() => {
+  'use strict';
+
+  const byId = id => document.getElementById(id);
+  const header = byId('header');
+  const menuButton = byId('menuButton');
+  const navLinks = byId('navLinks');
+  const navAnchors = navLinks ? Array.from(navLinks.querySelectorAll('a')) : [];
+  const sections = Array.from(document.querySelectorAll('main section[id]'));
+
+  const closeMenu = () => {
+    if (!navLinks || !menuButton) return;
+    navLinks.classList.remove('open');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.textContent = '☰';
+  };
+
+  const updateNavigation = () => {
+    if (header) header.classList.toggle('scrolled', window.scrollY > 12);
+    if (!sections.length || !navAnchors.length) return;
+    const position = window.scrollY + 120;
+    let current = sections[0].id;
+    sections.forEach(section => {
+      if (position >= section.offsetTop) current = section.id;
+    });
+    navAnchors.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  };
+
+  window.addEventListener('scroll', updateNavigation, { passive: true });
+  updateNavigation();
+
+  if (menuButton && navLinks) {
+    menuButton.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.textContent = open ? '✕' : '☰';
+    });
+    navAnchors.forEach(link => link.addEventListener('click', closeMenu));
+  }
+
+  // Content remains visible if IntersectionObserver is unavailable or JS fails.
+  const revealElements = Array.from(document.querySelectorAll('.reveal'));
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revealElements.forEach(element => element.classList.add('reveal-pending'));
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '80px 0px' });
+    revealElements.forEach(element => observer.observe(element));
+  }
+
+  const year = byId('year');
+  if (year) year.textContent = String(new Date().getFullYear());
+
+  const lightbox = byId('imageLightbox');
+  const lightboxImage = byId('lightboxImage');
+  const lightboxCaption = byId('lightboxCaption');
+  const lightboxOriginal = byId('lightboxOriginal');
+  const lightboxClose = byId('lightboxClose');
+  let lastLightboxTrigger = null;
+
+  const closeLightbox = () => {
+    if (!lightbox || !lightbox.classList.contains('open')) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-lock');
+    if (lightboxImage) lightboxImage.removeAttribute('src');
+    if (lastLightboxTrigger && typeof lastLightboxTrigger.focus === 'function') lastLightboxTrigger.focus();
+  };
+
+  const openLightbox = trigger => {
+    if (!lightbox || !lightboxImage || !lightboxCaption || !lightboxOriginal) return;
+    const src = trigger.getAttribute('data-lightbox-src');
+    if (!src) return;
+    const nestedImage = trigger.querySelector('img');
+    const caption = trigger.getAttribute('data-lightbox-caption') || (nestedImage ? nestedImage.alt : '') || 'Изображение';
+    lastLightboxTrigger = trigger;
+    lightboxImage.src = src;
+    lightboxImage.alt = caption;
+    lightboxCaption.textContent = caption;
+    lightboxOriginal.href = src;
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-lock');
+    if (lightboxClose) lightboxClose.focus();
+  };
+
+  document.querySelectorAll('[data-lightbox-src]').forEach(trigger => {
+    trigger.addEventListener('click', () => openLightbox(trigger));
+  });
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightbox) lightbox.addEventListener('click', event => {
+    if (event.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      closeMenu();
+      closeLightbox();
+    }
+  });
+
+  const form = byId('leadForm');
+  const formStatus = byId('formStatus');
+  if (form) {
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
+      const data = new FormData(form);
+      const value = name => String(data.get(name) || '').trim();
+      const message = [
+        'Привет! Хочу записаться на тренировку.',
+        '',
+        'Ник: ' + value('name'),
+        'Текущее ELO: ' + value('elo'),
+        'Формат: ' + value('format'),
+        'Что хочу улучшить: ' + value('goal'),
+        'Faceit / дополнительная информация: ' + (value('demo') || '—')
+      ].join('\n');
+      if (formStatus) formStatus.textContent = 'Открываю чат @mixertren с готовым сообщением…';
+      window.location.assign('https://t.me/mixertren?text=' + encodeURIComponent(message));
+    });
+  }
+})();
+</script>
+<script>
+(() => {
+  'use strict';
+  const canvas = document.getElementById('cursorLineCanvas');
+  if (!canvas || !window.matchMedia('(hover: hover) and (pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let width = 0, height = 0, dpr = 1, frame = 0, lastMove = 0;
+  const points = [];
+  const maxPoints = 18;
+
+  const resize = () => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const render = now => {
+    frame = 0;
+    ctx.clearRect(0, 0, width, height);
+    const age = now - lastMove;
+    if (!points.length || age > 420) {
+      points.length = 0;
+      canvas.classList.remove('is-visible');
+      return;
+    }
+    canvas.classList.add('is-visible');
+    for (let i = points.length - 1; i > 0; i -= 1) {
+      const alpha = (1 - i / points.length) * Math.max(0, 1 - age / 420) * .65;
+      ctx.beginPath();
+      ctx.moveTo(points[i].x, points[i].y);
+      ctx.lineTo(points[i - 1].x, points[i - 1].y);
+      ctx.strokeStyle = 'rgba(255,255,255,' + alpha.toFixed(3) + ')';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+    }
+    frame = requestAnimationFrame(render);
+  };
+
+  window.addEventListener('pointermove', event => {
+    points.unshift({ x: event.clientX, y: event.clientY });
+    if (points.length > maxPoints) points.length = maxPoints;
+    lastMove = performance.now();
+    if (!frame) frame = requestAnimationFrame(render);
+  }, { passive: true });
+
+  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('blur', () => {
+    points.length = 0;
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    ctx.clearRect(0, 0, width, height);
+    canvas.classList.remove('is-visible');
+  });
+  resize();
+})();
+</script>
+</body>
+</html>
