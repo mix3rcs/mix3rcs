@@ -1132,6 +1132,66 @@
     @media (max-width: 1180px) {
       .case-grid { grid-template-columns: 1fr; }
     }
+
+    /* Обновление блока кейсов: стабильная сетка без растягивания */
+    #chapter-3 .case-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    #chapter-3 .case-card {
+      width: 100%;
+      min-width: 0;
+    }
+
+    #chapter-3 .case-media {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: 12px;
+    }
+
+    #chapter-3 .case-shot {
+      min-width: 0;
+      align-self: start;
+    }
+
+    #chapter-3 .case-image-button {
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+    }
+
+    #chapter-3 .case-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    #chapter-3 .case-body {
+      grid-template-columns: minmax(0, 1fr) 170px;
+      align-items: start;
+    }
+
+    #chapter-3 .case-result {
+      grid-template-rows: none;
+      grid-auto-rows: 132px;
+      align-content: start;
+    }
+
+    #chapter-3 .elo-box {
+      min-height: 132px;
+    }
+
+    @media (max-width: 760px) {
+      #chapter-3 .case-media { grid-template-columns: 1fr; }
+      #chapter-3 .case-body { grid-template-columns: 1fr; }
+      #chapter-3 .case-result {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: none;
+        grid-auto-rows: 118px;
+      }
+      #chapter-3 .elo-box { min-height: 118px; }
+    }
 </style>
 </head>
 <body>
