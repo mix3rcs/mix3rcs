@@ -187,17 +187,17 @@
     }
 
     .hero {
-      min-height: 112svh;
-      padding: 118px 0 76px;
-      border-bottom: 1px solid var(--line);
+      min-height: auto;
+      padding: 92px 0 0;
+      border-bottom: 0;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .hero-grid {
       display: grid;
       grid-template-columns: minmax(0, .78fr) minmax(500px, 1.22fr);
-      gap: 28px;
+      gap: 26px;
       align-items: stretch;
     }
 
@@ -857,7 +857,7 @@
 
     .creator-note .container {
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
     }
 
     .creator-note span {
@@ -1184,6 +1184,306 @@
       }
       #chapter-3 .elo-box { min-height: 118px; }
     }
+
+
+    /* Блок уровней: прозрачный фон, совпадающий с основным фоном сайта */
+    .level-path {
+      position: relative;
+      overflow: visible;
+      padding-top: 0;
+      padding-bottom: clamp(62px, 7vw, 90px);
+      background: transparent;
+      border: 0;
+    }
+
+    .level-path::before {
+      content: none;
+    }
+
+    .level-path .container {
+      position: relative;
+      z-index: 1;
+      padding-top: 0;
+      padding-bottom: 0;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .level-path-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 32px;
+    }
+
+    .level-path-head .eyebrow {
+      margin-bottom: 14px;
+      color: #c7ff33;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .level-path-head .eyebrow::before {
+      content: "≫";
+      margin-right: 12px;
+      font-size: 1.1em;
+      vertical-align: baseline;
+    }
+
+    .level-path-head h2 {
+      margin: 0;
+      font-size: clamp(40px, 4.2vw, 58px);
+      line-height: .96;
+      letter-spacing: -.04em;
+      text-transform: none;
+    }
+
+    .level-path-intro-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 18px;
+      min-height: 100%;
+    }
+
+    .level-path-intro {
+      margin: 0;
+      text-align: left;
+      color: rgba(235,240,248,.88);
+      font-size: clamp(19px, 1.5vw, 22px);
+      line-height: 1.45;
+    }
+
+    .level-path-intro-line {
+      position: relative;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.08) 76%, rgba(199,255,51,.85) 100%);
+      overflow: visible;
+    }
+
+    .level-path-intro-line::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #d6ff47;
+      transform: translateY(-50%);
+      box-shadow: 0 0 20px rgba(214,255,71,.95), 0 0 34px rgba(214,255,71,.5);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .level-card {
+      --level-color: #43ff2b;
+      --level-rgb: 67, 255, 43;
+      position: relative;
+      min-height: 242px;
+      padding: 30px 32px;
+      display: grid;
+      grid-template-columns: 160px minmax(0, 1fr);
+      gap: 26px;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 0% 100%, rgba(var(--level-rgb), .06), transparent 32%),
+        linear-gradient(180deg, rgba(13,19,29,.74), rgba(8,12,19,.72));
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 18px 34px rgba(0,0,0,.28);
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
+      isolation: isolate;
+    }
+
+    .level-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(var(--level-rgb), .95), rgba(var(--level-rgb), .18) 12%, rgba(255,255,255,.08) 22%, rgba(255,255,255,.02) 100%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: .95;
+    }
+
+    .level-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -15% -58% auto;
+      width: 52%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(var(--level-rgb), .12), transparent 63%);
+      filter: blur(12px);
+      pointer-events: none;
+      opacity: .75;
+      transition: opacity .35s ease, transform .35s ease;
+    }
+
+    .level-card-red {
+      --level-color: #ff2e2e;
+      --level-rgb: 255, 46, 46;
+    }
+
+    .level-gauge {
+      width: 140px;
+      aspect-ratio: 1;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 48%, rgba(40,45,56,.95) 0 43%, rgba(18,22,31,.98) 44% 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 14px 24px rgba(0,0,0,.32);
+      transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+    .level-gauge::before {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      background: conic-gradient(from 225deg, var(--level-color) 0deg var(--level-progress), #2d3038 var(--level-progress) 306deg, transparent 306deg 360deg);
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 17px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 17px));
+      filter: drop-shadow(0 0 10px rgba(var(--level-rgb), .18));
+      transition: transform .35s ease, filter .35s ease;
+    }
+
+    .level-gauge strong {
+      position: relative;
+      z-index: 1;
+      color: var(--level-color);
+      font-size: 66px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.055em;
+      text-shadow: 0 0 18px rgba(var(--level-rgb), .12);
+      transition: transform .35s ease, text-shadow .35s ease;
+    }
+
+    .level-copy h3 {
+      margin: 0 0 12px;
+      color: #b3ff2b;
+      font-size: clamp(28px, 2.1vw, 44px);
+      line-height: 1.02;
+      letter-spacing: -.04em;
+      text-transform: none;
+      transition: transform .35s ease, color .35s ease;
+    }
+
+    .level-card-red .level-copy h3 {
+      color: #bdf42d;
+    }
+
+    .level-copy p {
+      margin: 0;
+      max-width: 460px;
+      color: rgba(243,246,251,.96);
+      font-size: clamp(16px, 1.3vw, 18px);
+      line-height: 1.58;
+    }
+
+    .level-card:hover,
+    .level-card:focus-visible {
+      transform: translateY(-6px);
+      border-color: rgba(var(--level-rgb), .25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 24px 44px rgba(0,0,0,.34);
+    }
+
+    .level-card:hover::after,
+    .level-card:focus-visible::after {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+
+    .level-card:hover .level-gauge,
+    .level-card:focus-visible .level-gauge {
+      transform: scale(1.035);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 16px 28px rgba(0,0,0,.34);
+    }
+
+    .level-card:hover .level-gauge::before,
+    .level-card:focus-visible .level-gauge::before {
+      transform: rotate(6deg);
+      filter: drop-shadow(0 0 15px rgba(var(--level-rgb), .26));
+    }
+
+    .level-card:hover .level-gauge strong,
+    .level-card:focus-visible .level-gauge strong {
+      transform: scale(1.03);
+      text-shadow: 0 0 26px rgba(var(--level-rgb), .22);
+    }
+
+    .level-card:hover .level-copy h3,
+    .level-card:focus-visible .level-copy h3 {
+      transform: translateX(3px);
+    }
+
+    @media (max-width: 1080px) {
+      .level-path-head {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .level-path-intro-wrap {
+        max-width: 760px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .level-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .level-path .container { padding: 28px 18px; }
+      .level-card {
+        min-height: 0;
+        padding: 26px 20px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .level-gauge {
+        width: 132px;
+        margin-inline: auto;
+      }
+      .level-gauge strong { font-size: 60px; }
+      .level-copy,
+      .level-copy p {
+        text-align: center;
+        margin-inline: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .level-card,
+      .level-card::after,
+      .level-gauge,
+      .level-gauge::before,
+      .level-gauge strong,
+      .level-copy h3 {
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media (min-width: 981px) {
+    }
+
 </style>
 </head>
 <body>
@@ -1224,6 +1524,40 @@
 <div class="hero-stat"><strong>12 000+</strong><span>часов в CS</span></div>
 <div class="hero-stat"><strong>4 000$+</strong><span>призовых за год</span></div>
 </div>
+</div>
+</div>
+</section>
+
+<section class="section level-path" id="level-path">
+<div class="container">
+<div class="level-path-head reveal">
+<div>
+<h2>Ответы на вопросы</h2>
+</div>
+<div class="level-path-intro-wrap">
+<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от обучения</p>
+<div class="level-path-intro-line" aria-hidden="true"></div>
+</div>
+</div>
+<div class="level-grid">
+<article class="level-card reveal" tabindex="0">
+<div aria-hidden="true" class="level-gauge" style="--level-progress: 108deg">
+<strong>3</strong>
+</div>
+<div class="level-copy">
+<h3>У тебя 3 ЛВЛ?</h3>
+<p>Поймёшь почему у тебя постоянно красный рейтинг и ты проигрываешь игры. Научишься находить киллы и делать разницу в играх</p>
+</div>
+</article>
+<article class="level-card level-card-red reveal" tabindex="0">
+<div aria-hidden="true" class="level-gauge" style="--level-progress: 257deg">
+<strong>10</strong>
+</div>
+<div class="level-copy">
+<h3>Застрял на 2000 эло?</h3>
+<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и их результат</p>
+</div>
+</article>
 </div>
 </div>
 </section>
