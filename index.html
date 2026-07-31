@@ -6,6 +6,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/><link as="image" fetchpriority="high" href="./hero.jpg" rel="preload" type="image/jpeg"/>
 <meta content="mix3r — индивидуальное обучение Counter-Strike 2 для Faceit, Premier, MM и других форматов: демки, роли, тайминги, экономика и рост ELO." name="description"/>
 <meta content="#050505" name="theme-color"/>
+<link rel="icon" href="./favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"/>
 <title>mix3r — индивидуальное обучение CS2</title>
 <style>
     :root {
@@ -969,27 +972,16 @@
       .elo-overview-item:last-child { border-bottom: 0; }
     }
 
-
-    /* Native cursor stays visible; this canvas adds a smooth white trailing line. */
-    .cursor-line-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .2s ease;
+    /* Компактный белый прицел вместо стандартного курсора. */
+    @media (hover: hover) and (pointer: fine) {
+      html,
+      body,
+      body * {
+        cursor: url("./crosshair-cursor.png") 8 8, crosshair !important;
+      }
     }
 
-    .cursor-line-canvas.is-visible { opacity: 1; }
-
-    @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-      .cursor-line-canvas { display: none !important; }
-    }
-
-
-    /* COLOR ACCENTS V3 — тёмная база с яркими, но контролируемыми акцентами */
+/* COLOR ACCENTS V3 — тёмная база с яркими, но контролируемыми акцентами */
     :root {
       --accent-lime: #c8ff5a;
       --accent-cyan: #58d7ff;
@@ -1195,7 +1187,6 @@
 </style>
 </head>
 <body>
-<canvas aria-hidden="true" class="cursor-line-canvas" id="cursorLineCanvas"></canvas>
 <header class="header" id="header">
 <div class="container nav">
 <a class="brand" href="#chapter-1">MIX3R</a>
@@ -1630,70 +1621,6 @@
       window.location.assign('https://t.me/mixertren?text=' + encodeURIComponent(message));
     });
   }
-})();
-</script>
-<script>
-(() => {
-  'use strict';
-  const canvas = document.getElementById('cursorLineCanvas');
-  if (!canvas || !window.matchMedia('(hover: hover) and (pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  let width = 0, height = 0, dpr = 1, frame = 0, lastMove = 0;
-  const points = [];
-  const maxPoints = 18;
-
-  const resize = () => {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(width * dpr);
-    canvas.height = Math.round(height * dpr);
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  };
-
-  const render = now => {
-    frame = 0;
-    ctx.clearRect(0, 0, width, height);
-    const age = now - lastMove;
-    if (!points.length || age > 420) {
-      points.length = 0;
-      canvas.classList.remove('is-visible');
-      return;
-    }
-    canvas.classList.add('is-visible');
-    for (let i = points.length - 1; i > 0; i -= 1) {
-      const alpha = (1 - i / points.length) * Math.max(0, 1 - age / 420) * .65;
-      ctx.beginPath();
-      ctx.moveTo(points[i].x, points[i].y);
-      ctx.lineTo(points[i - 1].x, points[i - 1].y);
-      ctx.strokeStyle = 'rgba(255,255,255,' + alpha.toFixed(3) + ')';
-      ctx.lineWidth = 1.5;
-      ctx.lineCap = 'round';
-      ctx.stroke();
-    }
-    frame = requestAnimationFrame(render);
-  };
-
-  window.addEventListener('pointermove', event => {
-    points.unshift({ x: event.clientX, y: event.clientY });
-    if (points.length > maxPoints) points.length = maxPoints;
-    lastMove = performance.now();
-    if (!frame) frame = requestAnimationFrame(render);
-  }, { passive: true });
-
-  window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('blur', () => {
-    points.length = 0;
-    if (frame) cancelAnimationFrame(frame);
-    frame = 0;
-    ctx.clearRect(0, 0, width, height);
-    canvas.classList.remove('is-visible');
-  });
-  resize();
 })();
 </script>
 </body>
