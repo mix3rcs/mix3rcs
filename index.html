@@ -202,10 +202,20 @@
     }
 
     .hero-copy {
-      padding: 38px 0;
+      padding: 54px 0 36px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+    }
+
+    .hero-copy .eyebrow {
+      margin-left: 2px;
+      margin-bottom: 16px;
+    }
+
+    .hero-copy h1 {
+      margin-left: -2px;
+      margin-bottom: 22px;
     }
 
     .eyebrow,
@@ -227,8 +237,9 @@
       margin-bottom: 18px;
       font-size: clamp(56px, 5.6vw, 86px);
       line-height: .86;
-      letter-spacing: -.065em;
+      letter-spacing: -.055em;
       text-transform: uppercase;
+      text-wrap: balance;
     }
 
     h2 {
@@ -249,6 +260,7 @@
       max-width: 650px;
       color: var(--muted);
       font-size: clamp(17px, 1.75vw, 20px);
+      text-wrap: pretty;
     }
 
     .hero-actions,
@@ -1012,10 +1024,10 @@
 
     h1 {
       color: #fff;
-      background: linear-gradient(100deg, #fff 0%, #fff 58%, var(--accent-cyan) 82%, var(--accent-violet) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+      background: none;
+      -webkit-background-clip: border-box;
+      background-clip: border-box;
+      -webkit-text-fill-color: currentColor;
     }
 
     .nav-links a.active,
@@ -1257,6 +1269,7 @@
       color: rgba(235,240,248,.88);
       font-size: clamp(19px, 1.5vw, 22px);
       line-height: 1.45;
+      text-wrap: pretty;
     }
 
     .level-path-intro-line {
@@ -1397,6 +1410,7 @@
       color: rgba(243,246,251,.96);
       font-size: clamp(16px, 1.3vw, 18px);
       line-height: 1.58;
+      text-wrap: pretty;
     }
 
     .level-card:hover,
@@ -1508,8 +1522,8 @@
 <div class="eyebrow">Кто я такой</div>
 <h1>MIX3R</h1>
 <p class="lead">Привет, меня зовут Максим. Мой ник — mix3r.</p>
-<p class="lead">В Counter-Strike больше 10 лет, из них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и работаю с игроками из Faceit, Premier, MM и других форматов.</p>
-<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и расти в рейтинге.</p>
+<p class="lead">В Counter-Strike больше 10 лет, из&nbsp;них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и&nbsp;работаю с игроками из&nbsp;Faceit, Premier, MM и&nbsp;других форматов.</p>
+<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и&nbsp;расти в рейтинге.</p>
 <div class="hero-actions">
 <a class="button button-primary" href="https://t.me/mixertren" rel="noopener" target="_blank">Написать мне в Telegram ↗</a>
 </div>
@@ -1535,7 +1549,7 @@
 <h2>Ответы на вопросы</h2>
 </div>
 <div class="level-path-intro-wrap">
-<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от обучения</p>
+<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от&nbsp;обучения</p>
 <div class="level-path-intro-line" aria-hidden="true"></div>
 </div>
 </div>
@@ -1546,7 +1560,7 @@
 </div>
 <div class="level-copy">
 <h3>У тебя 3 ЛВЛ?</h3>
-<p>Поймёшь почему у тебя постоянно красный рейтинг и ты проигрываешь игры. Научишься находить киллы и делать разницу в играх</p>
+<p>Поймёшь почему у тебя постоянно красный рейтинг и&nbsp;ты проигрываешь игры. Научишься находить киллы и&nbsp;делать разницу в&nbsp;играх</p>
 </div>
 </article>
 <article class="level-card level-card-red reveal" tabindex="0">
@@ -1555,7 +1569,7 @@
 </div>
 <div class="level-copy">
 <h3>Застрял на 2000 эло?</h3>
-<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и их результат</p>
+<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и&nbsp;их результат</p>
 </div>
 </article>
 </div>
@@ -1882,6 +1896,18 @@
     }, { threshold: 0.08, rootMargin: '80px 0px' });
     revealElements.forEach(element => observer.observe(element));
   }
+
+
+  const applyTypoFixes = () => {
+    const selectors = ['.lead', '.level-path-intro', '.level-copy p'];
+    const re = /(^|[\s ])(а|и|к|с|у|о|в|на|но|из|за|от|до|по|об|без|для|над|под|при|про|не|со)(\s+)/gi;
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(element => {
+        element.innerHTML = element.innerHTML.replace(re, (m, p1, p2) => `${p1}${p2}&nbsp;`);
+      });
+    });
+  };
+  applyTypoFixes();
 
   const year = byId('year');
   if (year) year.textContent = String(new Date().getFullYear());
