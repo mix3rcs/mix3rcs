@@ -715,16 +715,50 @@
       font-weight: 900;
     }
 
-    .payment-line {
+    .payment-details {
       margin-top: 12px;
-      padding: 12px;
+      display: grid;
       border: 1px solid var(--line);
+      background: rgba(255,255,255,.012);
+    }
+
+    .payment-line {
+      min-height: 48px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       text-align: center;
       color: var(--text);
       font-size: 13px;
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: .05em;
+    }
+
+    .payment-line + .payment-line {
+      border-top: 1px solid var(--line);
+    }
+
+    .payment-line span {
+      color: var(--accent-lime);
+    }
+
+    .payment-line strong {
+      color: #fff;
+      font: inherit;
+    }
+
+    .payment-contact span {
+      color: var(--accent-cyan);
+    }
+
+    @media (max-width: 620px) {
+      .payment-line {
+        flex-direction: column;
+        gap: 4px;
+      }
     }
 
     .form-card {
@@ -1603,7 +1637,7 @@
 
     .training-meta {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       margin-top: 14px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,.012);
@@ -1633,6 +1667,15 @@
       color: #fff;
       font-size: 15px;
       line-height: 1.45;
+      text-wrap: pretty;
+    }
+
+    .training-meta .training-audience {
+      min-height: 138px;
+    }
+
+    .training-meta .training-audience strong {
+      max-width: 590px;
     }
 
     @media (hover: hover) and (pointer: fine) {
@@ -1741,7 +1784,7 @@
 <div class="hero-copy reveal">
 <div class="eyebrow">Кто я такой</div>
 <h1>MIX3R</h1>
-<p class="lead">Привет, меня зовут Максим. Мой ник — mix3r.</p>
+<p class="lead">Привет, меня зовут Максим, мне 22 года. Мой ник — mix3r.</p>
 <p class="lead">В Counter-Strike больше 10 лет, из них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и работаю с игроками из Faceit, Premier, MM и других форматов.</p>
 <p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и расти в рейтинге.</p>
 <div class="hero-actions">
@@ -1755,8 +1798,8 @@
 <div class="hero-stats">
 <div class="hero-stat"><strong>4400</strong><span>пиковое ELO в CS:GO</span></div>
 <div class="hero-stat"><strong>3500</strong><span>пиковое ELO в CS2</span></div>
-<div class="hero-stat"><strong>12 00+</strong><span>часов в CS</span></div>
-<div class="hero-stat"><strong>4 00$+</strong><span>призовых за год</span></div>
+<div class="hero-stat"><strong>12&nbsp;000+</strong><span>часов в CS</span></div>
+<div class="hero-stat"><strong>4&nbsp;000$+</strong><span>призовых за год</span></div>
 </div>
 </div>
 </div>
@@ -1801,12 +1844,12 @@
 <div class="fact-list panel reveal">
 <div class="fact"><span class="fact-icon">1</span><span>Пиковое ELO в CS:GO — 4400.</span></div>
 <div class="fact"><span class="fact-icon">2</span><span>Пиковое ELO в CS2 — 3500.</span></div>
-<div class="fact"><span class="fact-icon">3</span><span>Более 12 00 часов в CS:GO и CS2.</span></div>
+<div class="fact"><span class="fact-icon">3</span><span>Более 12&nbsp;000 часов в CS:GO и CS2.</span></div>
 <div class="fact"><span class="fact-icon">4</span><span>Матч против команды из топ-40 мира на LAN-ивенте.</span></div>
 <div class="fact"><span class="fact-icon">5</span><span>Победа в главном полупрофессиональном турнире России в 2021 году.</span></div>
 <div class="fact"><span class="fact-icon">6</span><span>Участие в Red Bull Flick LAN 2x2.</span></div>
 <div class="fact"><span class="fact-icon">7</span><span>Четыре сезона в ESEA Main и два выхода в плей-офф.</span></div>
-<div class="fact"><span class="fact-icon">8</span><span>Более 4 00$ призовых за один год.</span></div>
+<div class="fact"><span class="fact-icon">8</span><span>4&nbsp;000$+ призовых за один год.</span></div>
 </div>
 <div class="panel photo-hover reveal">
 <img alt="Я с призовым чеком на турнире" class="achievement-photo" decoding="async" fetchpriority="low" height="960" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./achievement.jpg" width="1280"/>
@@ -1938,8 +1981,7 @@
 </article>
 </div>
 <div class="training-meta reveal">
-<article><span>Связь</span><strong>Discord · Телемост · Google Meet</strong></article>
-<article><span>Уровень</span><strong>Игроки до 2800 ELO</strong></article>
+<article class="training-audience"><span>Для кого подходят тренировки</span><strong>Для игроков Faceit от начального уровня до 2800 ELO. Программа подстраивается под текущий рейтинг, роль, повторяющиеся ошибки и цель обучения.</strong></article>
 <article><span>После занятия</span><strong>Запись, правки и следующий шаг</strong></article>
 </div>
 </div>
@@ -1985,7 +2027,10 @@
 </ul>
 </article>
 </div>
-<div class="payment-line reveal">Оплата: TG-кошелёк / крипта / карта РФ / Boosty</div>
+<div class="payment-details reveal">
+<div class="payment-line"><span>Оплата</span><strong>TG-кошелёк / крипта / карта РФ / Boosty</strong></div>
+<div class="payment-line payment-contact"><span>Связь</span><strong>Discord · Телемост · Google Meet</strong></div>
+</div>
 </div>
 <article class="form-card reveal" id="application">
 <h3>Хочешь записаться?</h3>
@@ -2119,7 +2164,7 @@
 
 
   const applyTypoFixes = () => {
-    const selectors = ['.lead', '.level-path-intro', '.level-copy p', '.fact span:last-child', '.case-copy p', '.case-copy li', '.list li', '.training-heading p', '.training-step p', '.training-meta strong', '.form-card p'];
+    const selectors = ['.lead', '.level-path-intro', '.level-copy p', '.fact span:last-child', '.case-copy p', '.case-copy li', '.list li', '.training-heading p', '.training-step p', '.training-meta strong', '.payment-line strong', '.form-card p'];
     const re = /(^|[\s ])(а|и|к|с|у|о|в|на|но|из|за|от|до|по|об|без|для|над|под|при|про|не|со)(\s+)/gi;
     selectors.forEach(selector => {
       document.querySelectorAll(selector).forEach(element => {
