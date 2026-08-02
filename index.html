@@ -6,9 +6,9 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/><link as="image" fetchpriority="high" href="./hero.jpg" rel="preload" type="image/jpeg"/>
 <meta content="mix3r — индивидуальное обучение Counter-Strike 2 для Faceit, Premier, MM и других форматов: демки, роли, тайминги, экономика и рост ELO." name="description"/>
 <meta content="#050505" name="theme-color"/>
-<link rel="icon" href="./favicon.ico" sizes="any"/>
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png"/>
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png"/>
+<link href="./favicon.ico" rel="icon" sizes="any"/>
+<link href="./favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="./apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
 <title>mix3r — индивидуальное обучение CS2</title>
 <style>
     :root {
@@ -1498,6 +1498,226 @@
     @media (min-width: 981px) {
     }
 
+
+
+    /* REVIEW FIXES — логика секций, карточки процесса и стабильная типографика */
+    .hero-stat strong {
+      white-space: nowrap;
+      font-size: clamp(22px, 2.4vw, 31px);
+      letter-spacing: -.035em;
+    }
+
+    #chapter-4 .section-title::after {
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet), transparent);
+    }
+
+    #chapter-5 .section-title::after {
+      background: linear-gradient(90deg, var(--accent-lime), var(--accent-orange), transparent);
+    }
+
+    .training-heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, .72fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .training-heading .section-title { margin-bottom: 0; }
+
+    .training-heading > p {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.35vw, 18px);
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+
+    .training-kicker {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--accent-cyan);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .training-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .training-step {
+      min-height: 230px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: linear-gradient(145deg, rgba(255,255,255,.024), rgba(255,255,255,.008));
+      transition: transform .3s ease, border-color .3s ease, background-color .3s ease, box-shadow .3s ease;
+    }
+
+    .training-step::after {
+      content: "";
+      position: absolute;
+      right: -35px;
+      bottom: -55px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(88,215,255,.1), transparent 68%);
+      pointer-events: none;
+    }
+
+    .training-step:nth-child(2n)::after {
+      background: radial-gradient(circle, rgba(169,112,255,.11), transparent 68%);
+    }
+
+    .training-number {
+      display: inline-flex;
+      margin-bottom: 32px;
+      color: var(--accent-cyan);
+      font-size: 12px;
+      font-weight: 1000;
+      letter-spacing: .14em;
+    }
+
+    .training-step:nth-child(2n) .training-number { color: var(--accent-violet); }
+
+    .training-step h3 {
+      margin-bottom: 12px;
+      color: #fff;
+      font-size: clamp(20px, 1.8vw, 27px);
+      letter-spacing: -.025em;
+    }
+
+    .training-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.62;
+      text-wrap: pretty;
+    }
+
+    .training-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.012);
+    }
+
+    .training-meta article {
+      min-height: 116px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .training-meta article:last-child { border-right: 0; }
+
+    .training-meta span {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .training-meta strong {
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .training-step:hover {
+        transform: translateY(-4px);
+        border-color: rgba(88,215,255,.42);
+        background: rgba(88,215,255,.035);
+        box-shadow: 0 18px 40px rgba(0,0,0,.3);
+      }
+      .training-step:nth-child(2n):hover {
+        border-color: rgba(169,112,255,.42);
+        background: rgba(169,112,255,.035);
+      }
+    }
+
+    .custom-select { position: relative; }
+
+    .custom-select-trigger {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: #090909;
+      text-align: left;
+      cursor: inherit;
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .custom-select.open .custom-select-trigger,
+    .custom-select-trigger:focus-visible {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(88,215,255,.08);
+      outline: none;
+    }
+
+    .custom-select-arrow { color: var(--accent-cyan); transition: transform .2s ease; }
+    .custom-select.open .custom-select-arrow { transform: rotate(180deg); }
+
+    .custom-select-menu {
+      position: absolute;
+      z-index: 40;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      padding: 6px;
+      border: 1px solid var(--line-strong);
+      background: #090909;
+      box-shadow: 0 18px 40px rgba(0,0,0,.55);
+    }
+
+    .custom-select-menu button {
+      width: 100%;
+      padding: 11px 12px;
+      border: 0;
+      color: var(--text);
+      background: transparent;
+      text-align: left;
+      cursor: inherit;
+    }
+
+    .custom-select-menu button:hover,
+    .custom-select-menu button:focus-visible {
+      color: #050505;
+      background: linear-gradient(100deg, var(--accent-lime), var(--accent-cyan));
+      outline: none;
+    }
+
+    @media (max-width: 980px) {
+      .training-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .training-heading { grid-template-columns: 1fr; gap: 14px; }
+      .training-flow { grid-template-columns: 1fr; }
+      .training-step { min-height: 0; }
+      .training-meta { grid-template-columns: 1fr; }
+      .training-meta article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .training-meta article:last-child { border-bottom: 0; }
+    }
+
 </style>
 </head>
 <body>
@@ -1508,9 +1728,9 @@
 <a href="#chapter-1">Кто я такой</a>
 <a href="#chapter-2">Почему мне стоит верить</a>
 <a href="#chapter-3">Успехи учеников</a>
-<a href="#chapter-4">Формат и цены</a>
-<a href="#chapter-5">Как проходит обучение</a>
-</nav>
+
+
+<a href="#chapter-4">Как проходит обучение</a><a href="#chapter-5">Формат и цены</a></nav>
 <a class="button button-primary" href="#application">Написать мне ↗</a>
 <button aria-expanded="false" aria-label="Открыть меню" class="menu-button" id="menuButton">☰</button>
 </div>
@@ -1522,8 +1742,8 @@
 <div class="eyebrow">Кто я такой</div>
 <h1>MIX3R</h1>
 <p class="lead">Привет, меня зовут Максим. Мой ник — mix3r.</p>
-<p class="lead">В Counter-Strike больше 10 лет, из&nbsp;них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и&nbsp;работаю с игроками из&nbsp;Faceit, Premier, MM и&nbsp;других форматов.</p>
-<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и&nbsp;расти в рейтинге.</p>
+<p class="lead">В Counter-Strike больше 10 лет, из них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и работаю с игроками из Faceit, Premier, MM и других форматов.</p>
+<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и расти в рейтинге.</p>
 <div class="hero-actions">
 <a class="button button-primary" href="https://t.me/mixertren" rel="noopener" target="_blank">Написать мне в Telegram ↗</a>
 </div>
@@ -1535,13 +1755,12 @@
 <div class="hero-stats">
 <div class="hero-stat"><strong>4400</strong><span>пиковое ELO в CS:GO</span></div>
 <div class="hero-stat"><strong>3500</strong><span>пиковое ELO в CS2</span></div>
-<div class="hero-stat"><strong>12 000+</strong><span>часов в CS</span></div>
-<div class="hero-stat"><strong>4 000$+</strong><span>призовых за год</span></div>
+<div class="hero-stat"><strong>12 00+</strong><span>часов в CS</span></div>
+<div class="hero-stat"><strong>4 00$+</strong><span>призовых за год</span></div>
 </div>
 </div>
 </div>
 </section>
-
 <section class="section level-path" id="level-path">
 <div class="container">
 <div class="level-path-head reveal">
@@ -1549,8 +1768,8 @@
 <h2>Ответы на вопросы</h2>
 </div>
 <div class="level-path-intro-wrap">
-<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от&nbsp;обучения</p>
-<div class="level-path-intro-line" aria-hidden="true"></div>
+<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от обучения</p>
+<div aria-hidden="true" class="level-path-intro-line"></div>
 </div>
 </div>
 <div class="level-grid">
@@ -1560,7 +1779,7 @@
 </div>
 <div class="level-copy">
 <h3>У тебя 3 ЛВЛ?</h3>
-<p>Поймёшь почему у тебя постоянно красный рейтинг и&nbsp;ты проигрываешь игры. Научишься находить киллы и&nbsp;делать разницу в&nbsp;играх</p>
+<p>Поймёшь почему у тебя постоянно красный рейтинг и ты проигрываешь игры. Научишься находить киллы и делать разницу в играх</p>
 </div>
 </article>
 <article class="level-card level-card-red reveal" tabindex="0">
@@ -1569,7 +1788,7 @@
 </div>
 <div class="level-copy">
 <h3>Застрял на 2000 эло?</h3>
-<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и&nbsp;их результат</p>
+<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и их результат</p>
 </div>
 </article>
 </div>
@@ -1582,29 +1801,18 @@
 <div class="fact-list panel reveal">
 <div class="fact"><span class="fact-icon">1</span><span>Пиковое ELO в CS:GO — 4400.</span></div>
 <div class="fact"><span class="fact-icon">2</span><span>Пиковое ELO в CS2 — 3500.</span></div>
-<div class="fact"><span class="fact-icon">3</span><span>Более 12 000 часов в CS:GO и CS2.</span></div>
+<div class="fact"><span class="fact-icon">3</span><span>Более 12 00 часов в CS:GO и CS2.</span></div>
 <div class="fact"><span class="fact-icon">4</span><span>Матч против команды из топ-40 мира на LAN-ивенте.</span></div>
 <div class="fact"><span class="fact-icon">5</span><span>Победа в главном полупрофессиональном турнире России в 2021 году.</span></div>
 <div class="fact"><span class="fact-icon">6</span><span>Участие в Red Bull Flick LAN 2x2.</span></div>
 <div class="fact"><span class="fact-icon">7</span><span>Четыре сезона в ESEA Main и два выхода в плей-офф.</span></div>
-<div class="fact"><span class="fact-icon">8</span><span>Более 4 000$ призовых за один год.</span></div>
+<div class="fact"><span class="fact-icon">8</span><span>Более 4 00$ призовых за один год.</span></div>
 </div>
 <div class="panel photo-hover reveal">
 <img alt="Я с призовым чеком на турнире" class="achievement-photo" decoding="async" fetchpriority="low" height="960" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./achievement.jpg" width="1280"/>
 </div>
 </div>
-<div aria-label="Мои пиковые рейтинги" class="elo-overview reveal">
-<article class="elo-overview-item">
-<span>Counter-Strike: Global Offensive</span>
-<strong>4400 ELO</strong>
-<p>Максимальный рейтинг в CS:GO. Этот опыт сформировал глубокое понимание соревновательной игры, ролей и решений на высоком уровне.</p>
-</article>
-<article class="elo-overview-item">
-<span>Counter-Strike 2</span>
-<strong>3500 ELO</strong>
-<p>Пиковый рейтинг в CS2. На занятиях используются актуальные механики, тайминги и принципы игры текущей версии Counter-Strike.</p>
-</article>
-</div>
+
 <div class="inline-actions reveal">
 <a class="button button-secondary" href="https://www.youtube.com/watch?v=A06Lpoe9f9A" rel="noopener" target="_blank">Матч против топ-40 команды мира на LAN</a>
 <a class="button button-secondary" href="https://vkvideo.ru/video-174875268_456239466?pl=-174875268_1" rel="noopener" target="_blank">Red Bull Flick LAN с моим участием</a>
@@ -1690,6 +1898,53 @@
 </section>
 <section class="section" id="chapter-4">
 <div class="container">
+<div class="training-heading reveal">
+<div>
+<span class="training-kicker">От первой диагностики до понятного плана</span>
+<h2 class="section-title">Как проходит обучение</h2>
+</div>
+<p>Не лекция на час, а практическая работа с твоей игрой: находим главную проблему, исправляем её и закрепляем результат.</p>
+</div>
+<div class="training-flow">
+<article class="training-step reveal">
+<span class="training-number">01</span>
+<h3>Определяем цель</h3>
+<p>Фиксируем текущий уровень и понимаем, что именно тормозит рост: стрельба, позиции, тайминги или решения.</p>
+</article>
+<article class="training-step reveal">
+<span class="training-number">02</span>
+<h3>Разбираем игру</h3>
+<p>Смотрим демку, экран или конкретные раунды. Отделяем случайные ошибки от тех, которые повторяются постоянно.</p>
+</article>
+<article class="training-step reveal">
+<span class="training-number">03</span>
+<h3>Показываю решение</h3>
+<p>Объясняю, как действовать в похожих ситуациях: где стоять, когда двигаться, какую дуэль выбирать и почему.</p>
+</article>
+<article class="training-step reveal">
+<span class="training-number">04</span>
+<h3>Закрепляем на практике</h3>
+<p>Играем вместе или разбираем матч вживую на Faceit, Premier или MM. Правки применяются сразу по ходу игры.</p>
+</article>
+<article class="training-step reveal">
+<span class="training-number">05</span>
+<h3>Собираем план</h3>
+<p>После занятия остаются конкретные упражнения и два–три приоритета без перегруза лишней теорией.</p>
+</article>
+<article class="training-step reveal">
+<span class="training-number">06</span>
+<h3>Проверяем прогресс</h3>
+<p>На следующей тренировке смотрим, что уже закрепилось, и корректируем план под новые ошибки и задачи.</p>
+</article>
+</div>
+<div class="training-meta reveal">
+<article><span>Связь</span><strong>Discord · Телемост · Google Meet</strong></article>
+<article><span>Уровень</span><strong>Игроки до 2800 ELO</strong></article>
+<article><span>После занятия</span><strong>Запись, правки и следующий шаг</strong></article>
+</div>
+</div>
+</section><section class="section" id="chapter-5">
+<div class="container">
 <h2 class="section-title reveal">Формат и цены</h2>
 <div class="pricing-layout">
 <div>
@@ -1747,13 +2002,20 @@
 </div>
 <div class="field field-full">
 <label for="format">Формат</label>
-<select id="format" name="format" required="">
-<option value="">Выбери формат</option>
-<option>Разовая тренировка — 1500 ₽</option>
-<option>4 занятия — 5400 ₽</option>
-<option>10 занятий — 12750 ₽</option>
-<option>Хочу обсудить формат</option>
-</select>
+
+
+<div class="custom-select" data-custom-select="">
+<button aria-expanded="false" aria-haspopup="listbox" class="custom-select-trigger" type="button">
+<span>Выбери формат</span><span aria-hidden="true" class="custom-select-arrow">⌄</span>
+</button>
+<div class="custom-select-menu" hidden="" role="listbox">
+<button data-value="Разовая тренировка — 1500 ₽" role="option" type="button">Разовая тренировка — 1500 ₽</button>
+<button data-value="4 занятия — 5400 ₽" role="option" type="button">4 занятия — 5400 ₽</button>
+<button data-value="10 занятий — 12750 ₽" role="option" type="button">10 занятий — 12750 ₽</button>
+<button data-value="Хочу обсудить формат" role="option" type="button">Хочу обсудить формат</button>
+</div>
+<input id="format" name="format" type="hidden" value=""/>
+</div>
 </div>
 <div class="field field-full">
 <label for="goal">Что хочешь улучшить?</label>
@@ -1773,49 +2035,7 @@
 </div>
 </div>
 </section>
-<section class="section" id="chapter-5">
-<div class="container">
-<h2 class="section-title reveal">Как проходит обучение</h2>
-<div class="learning-layout reveal">
-<article class="learning-column">
-<h3 class="learning-column-title">Формат под твою цель</h3>
-<ul class="learning-bullets">
-<li><strong>Конкретный разбор</strong> — разбираем конкретную проблему: стрельбу, экономику, тайминги, позиции или принятие решений.</li>
-<li><strong>Обучение с нуля</strong> — выстраиваем понимание игры от базы до более сложных игровых ситуаций.</li>
-<li><strong>Совместная игра</strong> — играем вместе на Faceit, Premier или MM и разбираем решения прямо по ходу матча.</li>
-<li><strong>Просмотр игры вживую</strong> — смотрим твой матч или экран и сразу исправляем ошибки по ситуации.</li>
-<li><strong>Групповые тренировки</strong> — тренировочный матч под наблюдением с акцентом на коммуникацию и тимплей.</li>
-<li><strong>Подготовка к занятию</strong> — достаточно подготовить вопросы, демку матча или ссылку на профиль.</li>
-</ul>
-</article>
-<article class="learning-column">
-<h3 class="learning-column-title">Чему ты научишься?</h3>
-<ul class="learning-bullets">
-<li><strong>Играть стабильнее</strong> — лучше понимать, что делать в каждом отрезке раунда и почему.</li>
-<li><strong>Давать больше фрагов</strong> — за счёт правильных позиций, таймингов, стрельбы и выбора дуэлей.</li>
-<li><strong>Читать игру</strong> — видеть экономику, структуру раунда, движения соперника и ключевые риски.</li>
-<li><strong>Двигаться по карте</strong> — использовать геометрию, тайминги, дефолты и пространство команды.</li>
-<li><strong>Играть правильно</strong> — на Faceit, Premier и MM без хаоса, лишней суеты и случайных решений.</li>
-<li><strong>Тренироваться по плану</strong> — после занятия будет ясно, над чем работать дальше и как это делать.</li>
-</ul>
-</article>
-</div>
-<div class="learning-bottom reveal">
-<article class="learning-mini">
-<span class="learning-mini-title">Где проходит обучение?</span>
-<p>Discord, Яндекс Телемост или Google Meet — выбираем удобный формат связи.</p>
-</article>
-<article class="learning-mini">
-<span class="learning-mini-title">Уровень игроков</span>
-<p>Индивидуальное обучение рассчитано на игроков до 2800 ELO.</p>
-</article>
-<article class="learning-mini">
-<span class="learning-mini-title">Что в результате?</span>
-<p>После занятия остаются конкретные правки, приоритеты и понятный следующий шаг.</p>
-</article>
-</div>
-</div>
-</section>
+
 <div aria-label="Авторская отметка" class="creator-note">
 <div class="container"><span>ccorb1</span></div>
 </div>
@@ -1899,7 +2119,7 @@
 
 
   const applyTypoFixes = () => {
-    const selectors = ['.lead', '.level-path-intro', '.level-copy p'];
+    const selectors = ['.lead', '.level-path-intro', '.level-copy p', '.fact span:last-child', '.case-copy p', '.case-copy li', '.list li', '.training-heading p', '.training-step p', '.training-meta strong', '.form-card p'];
     const re = /(^|[\s ])(а|и|к|с|у|о|в|на|но|из|за|от|до|по|об|без|для|над|под|при|про|не|со)(\s+)/gi;
     selectors.forEach(selector => {
       document.querySelectorAll(selector).forEach(element => {
@@ -1960,6 +2180,49 @@
     }
   });
 
+
+  const customSelect = document.querySelector('[data-custom-select]');
+  if (customSelect) {
+    const trigger = customSelect.querySelector('.custom-select-trigger');
+    const triggerLabel = trigger ? trigger.querySelector('span') : null;
+    const menu = customSelect.querySelector('.custom-select-menu');
+    const input = customSelect.querySelector('input[name="format"]');
+    const options = menu ? Array.from(menu.querySelectorAll('[data-value]')) : [];
+
+    const closeCustomSelect = () => {
+      customSelect.classList.remove('open');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      if (menu) menu.hidden = true;
+    };
+
+    const openCustomSelect = () => {
+      customSelect.classList.add('open');
+      if (trigger) trigger.setAttribute('aria-expanded', 'true');
+      if (menu) menu.hidden = false;
+    };
+
+    if (trigger) {
+      trigger.addEventListener('click', () => {
+        customSelect.classList.contains('open') ? closeCustomSelect() : openCustomSelect();
+      });
+    }
+
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        const value = option.getAttribute('data-value') || option.textContent.trim();
+        if (input) input.value = value;
+        if (triggerLabel) triggerLabel.textContent = value;
+        options.forEach(item => item.setAttribute('aria-selected', String(item === option)));
+        closeCustomSelect();
+        if (trigger) trigger.focus();
+      });
+    });
+
+    document.addEventListener('click', event => {
+      if (!customSelect.contains(event.target)) closeCustomSelect();
+    });
+  }
+
   const form = byId('leadForm');
   const formStatus = byId('formStatus');
   if (form) {
@@ -1968,6 +2231,12 @@
       if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
       const data = new FormData(form);
       const value = name => String(data.get(name) || '').trim();
+      if (!value('format')) {
+        if (formStatus) formStatus.textContent = 'Выбери формат тренировки.';
+        const formatTrigger = document.querySelector('.custom-select-trigger');
+        if (formatTrigger) formatTrigger.focus();
+        return;
+      }
       const message = [
         'Привет! Хочу записаться на тренировку.',
         '',
