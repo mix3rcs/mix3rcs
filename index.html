@@ -33,6 +33,8 @@
       --header: 74px;
       --mx: 50%;
       --my: 20%;
+      --ease-out: cubic-bezier(.16, 1, .3, 1);
+      --ease-soft: cubic-bezier(.22, 1, .36, 1);
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -80,6 +82,12 @@
     button, a { -webkit-tap-highlight-color: transparent; }
     :focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
 
+    @media (pointer: fine) {
+      html, body, body * {
+        cursor: url("./crosshair-cursor.png") 8 8, crosshair !important;
+      }
+    }
+
     .container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
     .section { position: relative; padding: 112px 0; }
     .section + .section { border-top: 1px solid var(--line); }
@@ -95,13 +103,14 @@
       transform-origin: left;
       background: linear-gradient(90deg, var(--lime), var(--cyan));
       box-shadow: 0 0 18px rgba(79,195,255,.55);
+      transition: transform .12s linear;
     }
 
     .header {
       position: fixed;
       inset: 0 0 auto;
       z-index: 200;
-      transition: background .25s ease, border-color .25s ease, transform .25s ease;
+      transition: background .4s ease, border-color .4s ease, transform .45s var(--ease-out);
       border-bottom: 1px solid transparent;
     }
     .header.scrolled { border-color: var(--line); background: rgba(7,9,7,.84); backdrop-filter: blur(18px) saturate(130%); }
@@ -109,7 +118,8 @@
     .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 1000; letter-spacing: -.04em; font-size: 24px; }
     .brand-mark { width: 12px; height: 12px; background: var(--lime); box-shadow: 0 0 20px rgba(79,195,255,.7); transform: rotate(45deg); }
     .nav-links { display: flex; align-items: center; gap: 6px; padding: 5px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); }
-    .nav-links a { padding: 8px 12px; border-radius: 999px; color: var(--muted); font-size: 12px; font-weight: 800; transition: color .2s, background .2s; }
+    .nav-links a { padding: 8px 12px; border-radius: 999px; color: var(--muted); font-size: 12px; font-weight: 800; transition: color .35s ease, background .35s ease, transform .4s var(--ease-out); }
+    .nav-links a:hover { transform: translateY(-1px); }
     .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
     .menu-button { display: none; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 14px; color: var(--text); background: var(--panel); cursor: pointer; }
 
@@ -128,15 +138,16 @@
       background: rgba(255,255,255,.04);
       font-weight: 900;
       cursor: pointer;
-      transition: transform .25s cubic-bezier(.2,.75,.2,1), border-color .25s, background .25s, box-shadow .25s;
+      will-change: transform;
+      transition: transform .45s var(--ease-out), border-color .4s ease, background .4s ease, box-shadow .45s var(--ease-out);
     }
-    .button::before { content: ""; position: absolute; inset: 0; transform: translateX(-110%); background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.28), transparent 70%); transition: transform .65s ease; }
-    .button:hover { transform: translateY(-3px); border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); box-shadow: 0 14px 34px rgba(0,0,0,.28); }
+    .button::before { content: ""; position: absolute; inset: 0; transform: translateX(-110%); background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.28), transparent 70%); transition: transform .8s var(--ease-soft); }
+    .button:hover { transform: translateY(-4px) scale(1.01); border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); box-shadow: 0 14px 34px rgba(0,0,0,.28); }
     .button:hover::before { transform: translateX(110%); }
     .button-primary { color: #07111d; border-color: var(--lime); background: var(--lime); box-shadow: 0 0 30px rgba(79,195,255,.16); }
     .button-primary:hover { border-color: #9bdfff; background: #9bdfff; box-shadow: 0 14px 40px rgba(79,195,255,.25); }
     .button-small { min-height: 44px; padding-inline: 17px; border-radius: 12px; font-size: 13px; }
-    .arrow { transition: transform .2s; }
+    .arrow { transition: transform .4s var(--ease-out); }
     .button:hover .arrow { transform: translate(3px,-3px); }
 
     .kicker { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--lime); font-size: 12px; font-weight: 1000; letter-spacing: .14em; text-transform: uppercase; }
@@ -185,7 +196,7 @@
     .ticker-track span::after { content: "◆"; margin-left: 28px; }
 
     .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.018); }
-    .stat { min-height: 180px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); }
+    .stat { min-height: 150px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); }
     .stat:last-child { border-right: 0; }
     .stat span { color: var(--muted); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
     .stat strong { font-size: clamp(38px,4vw,58px); line-height: 1; letter-spacing: -.06em; }
@@ -195,22 +206,22 @@
     .stat:nth-child(4) strong { color: var(--orange); }
 
     .levels { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 18px; }
-    .level-card { position: relative; min-height: 330px; padding: 34px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)); transition: transform .35s, border-color .35s, background .35s; }
+    .level-card { position: relative; min-height: 270px; padding: 30px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)); transition: transform .55s var(--ease-out), border-color .45s ease, background .45s ease, box-shadow .55s var(--ease-out); }
     .level-card:hover { transform: translateY(-6px); border-color: var(--line-strong); background: linear-gradient(145deg,rgba(79,195,255,.09),rgba(255,255,255,.018)); }
     .level-card:nth-child(2):hover { background: linear-gradient(145deg,rgba(255,77,95,.08),rgba(255,255,255,.018)); }
     .level-index { position: absolute; right: 22px; top: 4px; color: rgba(255,255,255,.035); font-size: 190px; line-height: 1; font-weight: 1000; letter-spacing: -.1em; }
     .level-chip { display: inline-flex; padding: 7px 11px; border: 1px solid rgba(79,195,255,.34); border-radius: 999px; color: var(--lime); font-size: 11px; font-weight: 900; text-transform: uppercase; }
     .level-card:nth-child(2) .level-chip { color: #ff7482; border-color: rgba(255,77,95,.32); }
-    .level-card h3 { max-width: 410px; margin-top: 80px; font-size: clamp(30px,3.4vw,48px); text-transform: uppercase; }
+    .level-card h3 { max-width: 410px; margin-top: 50px; font-size: clamp(30px,3.4vw,48px); text-transform: uppercase; }
     .level-card p { position: relative; z-index: 2; max-width: 500px; margin-bottom: 0; color: var(--muted); font-size: 17px; }
 
     .proof-grid { display: grid; grid-template-columns: minmax(380px,.82fr) minmax(0,1.18fr); gap: 18px; }
-    .proof-photo { position: relative; min-height: 680px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); }
+    .proof-photo { position: relative; min-height: 470px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); }
     .proof-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
     .proof-photo:hover img { transform: scale(1.035); }
     .proof-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg,transparent 58%,rgba(7,9,7,.8)); }
     .fact-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
-    .fact { min-height: 162px; padding: 23px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); transition: border-color .25s, transform .25s, background .25s; }
+    .fact { min-height: 230px; padding: 24px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); transition: transform .5s var(--ease-out), border-color .4s ease, background .4s ease, box-shadow .5s var(--ease-out); }
     .fact:hover { transform: translateY(-3px); border-color: var(--line-strong); background: rgba(255,255,255,.035); }
     .fact-number { display: block; margin-bottom: 24px; color: var(--lime); font-size: 11px; font-weight: 1000; letter-spacing: .1em; }
     .fact p { max-width: 260px; margin: 0; color: #c3ccd9; font-weight: 700; }
@@ -232,36 +243,49 @@
     .case-shot img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.75) contrast(1.05); transition: transform .5s, filter .5s; }
     .case-shot:hover img { transform: scale(1.04); filter: saturate(1) contrast(1.08); }
     .shot-label { position: absolute; left: 14px; bottom: 14px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(7,9,7,.72); backdrop-filter: blur(10px); font-size: 10px; font-weight: 900; text-transform: uppercase; }
-    .case-body { padding: 30px 34px 34px; display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; border-top: 1px solid var(--line); }
-    .case-detail span { display: block; margin-bottom: 9px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .11em; text-transform: uppercase; }
-    .case-detail p { margin: 0; color: var(--muted); }
+    .case-focus { margin: 0 0 24px; color: var(--muted); font-size: 13px; font-weight: 750; }
 
-    .process { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-    .step { position: relative; min-height: 290px; padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.012); transition: background .3s; }
-    .step:nth-child(3n) { border-right: 0; }
-    .step:nth-last-child(-n+3) { border-bottom: 0; }
-    .step:hover { background: rgba(79,195,255,.055); }
-    .step-number { display: inline-grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--lime); font-size: 11px; font-weight: 1000; }
-    .step h3 { margin-top: 70px; font-size: 27px; text-transform: uppercase; }
-    .step p { margin-bottom: 0; color: var(--muted); }
-    .process-footer { margin-top: 18px; display: grid; grid-template-columns: 1.5fr .5fr; gap: 18px; }
-    .process-note { padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); }
+    .journey { position: relative; padding-top: 12px; }
+    .journey-line { position: absolute; left: 8%; right: 8%; top: 41px; height: 2px; overflow: hidden; background: var(--line); }
+    .journey-line::after { content: ""; position: absolute; inset: 0; transform: translateX(-72%); background: linear-gradient(90deg,transparent,var(--lime),var(--violet),transparent); animation: journey-flow 5s ease-in-out infinite; }
+    .journey-list { position: relative; display: grid; grid-template-columns: repeat(3,1fr); gap: 26px; }
+    .journey-step { min-width: 0; }
+    .journey-number { width: 58px; height: 58px; position: relative; z-index: 2; display: grid; place-items: center; margin-inline: auto; border: 1px solid var(--line-strong); border-radius: 50%; color: #07111d; background: var(--lime); box-shadow: 0 0 0 10px var(--bg),0 0 30px rgba(79,195,255,.22); font-size: 11px; font-weight: 1000; }
+    .journey-card { min-height: 230px; margin-top: 28px; padding: 28px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(150deg,rgba(255,255,255,.038),rgba(255,255,255,.012)); transition: transform .55s var(--ease-out),border-color .45s ease,background .45s ease,box-shadow .55s var(--ease-out); }
+    .journey-card::after { content: attr(data-stage); position: absolute; right: 18px; bottom: -32px; color: rgba(255,255,255,.035); font-size: 150px; line-height: 1; font-weight: 1000; }
+    .journey-card:hover { transform: translateY(-6px); border-color: var(--line-strong); background: linear-gradient(150deg,rgba(79,195,255,.07),rgba(255,255,255,.014)); }
+    .journey-card span { display: block; margin-bottom: 44px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; }
+    .journey-card h3 { position: relative; z-index: 1; margin-bottom: 10px; font-size: 29px; text-transform: uppercase; }
+    .journey-card p { position: relative; z-index: 1; max-width: 310px; margin: 0; color: var(--muted); }
+
+    .format-head { margin: 78px 0 24px; display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+    .format-head h3 { margin: 0; font-size: clamp(34px,4.6vw,58px); text-transform: uppercase; }
+    .format-head p { max-width: 360px; margin: 0; color: var(--muted); }
+    .format-grid { width: 100%; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+    .format-card { min-height: 200px; padding: 26px; position: relative; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.018); transition: transform .55s var(--ease-out),border-color .45s ease,background .45s ease,box-shadow .55s var(--ease-out); }
+    .format-card:hover { transform: translateY(-5px); border-color: var(--line-strong); background: rgba(79,195,255,.055); }
+    .format-card > span { display: block; margin-bottom: auto; padding-bottom: 34px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; }
+    .format-card h3 { margin-bottom: 10px; font-size: 21px; text-transform: uppercase; }
+    .format-card p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .process-footer { margin-top: 12px; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .process-note { min-height: 150px; padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); }
     .process-note span { display: block; margin-bottom: 8px; color: var(--lime); font-size: 10px; font-weight: 1000; text-transform: uppercase; letter-spacing: .1em; }
     .process-note strong { font-size: 17px; }
-    .process-note p { max-width: 760px; margin: 12px 0 0; color: var(--muted); }
+    .process-note p { max-width: 760px; margin: 9px 0 0; color: var(--muted); }
 
-    .learn-head { margin: 86px 0 28px; max-width: 760px; }
+    .learn-head { margin: 72px 0 28px; max-width: 760px; }
     .learn-head h3 { margin-bottom: 0; font-size: clamp(34px,4.6vw,58px); text-transform: uppercase; }
     .learn-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
-    .learn-card { position: relative; min-height: 330px; padding: 30px; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(150deg,rgba(255,255,255,.035),rgba(255,255,255,.012)); transition: transform .3s,border-color .3s,background .3s; }
+    .learn-card { position: relative; min-height: 270px; padding: 28px; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(150deg,rgba(255,255,255,.035),rgba(255,255,255,.012)); transition: transform .55s var(--ease-out),border-color .45s ease,background .45s ease,box-shadow .55s var(--ease-out); }
     .learn-card:hover { transform: translateY(-5px); border-color: var(--line-strong); background: linear-gradient(150deg,rgba(79,195,255,.075),rgba(255,255,255,.015)); }
     .learn-code { display: inline-flex; align-items: center; gap: 8px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; }
     .learn-code::before { content: ""; width: 8px; height: 8px; border: 1px solid currentColor; transform: rotate(45deg); }
-    .learn-card h3 { margin: 98px 0 14px; font-size: 28px; text-transform: uppercase; }
+    .learn-card h3 { margin: 64px 0 12px; font-size: 28px; text-transform: uppercase; }
     .learn-card p { margin: 0; color: var(--muted); }
 
     .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; align-items: stretch; }
-    .price-card { position: relative; min-height: 500px; padding: 30px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.018); transition: transform .35s, border-color .35s, box-shadow .35s; }
+    .price-card { position: relative; min-height: 450px; padding: 30px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.018); transition: transform .6s var(--ease-out), border-color .45s ease, box-shadow .6s var(--ease-out); }
     .price-card:hover { transform: translateY(-7px); border-color: var(--line-strong); box-shadow: 0 28px 60px rgba(0,0,0,.32); }
     .price-card.featured { border-color: rgba(79,195,255,.55); background: linear-gradient(160deg,rgba(79,195,255,.12),rgba(255,255,255,.018) 42%); }
     .price-card.featured::before { content: ""; position: absolute; width: 260px; height: 260px; right: -100px; top: -110px; border-radius: 50%; background: rgba(79,195,255,.15); filter: blur(20px); }
@@ -277,7 +301,7 @@
     .payment { margin-top: 18px; padding: 22px 26px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; border: 1px solid var(--line); border-radius: 18px; color: var(--muted); font-size: 13px; }
     .payment strong { color: var(--text); }
 
-    .faq { margin-top: 88px; display: grid; grid-template-columns: .7fr 1.3fr; gap: 52px; align-items: start; }
+    .faq { margin-top: 72px; display: grid; grid-template-columns: .7fr 1.3fr; gap: 52px; align-items: start; }
     .faq-intro { position: sticky; top: calc(var(--header) + 28px); }
     .faq-intro h3 { margin-bottom: 14px; font-size: clamp(38px,5vw,62px); text-transform: uppercase; }
     .faq-intro p { max-width: 390px; color: var(--muted); }
@@ -285,7 +309,7 @@
     .faq-item { border-bottom: 1px solid var(--line); }
     .faq-item summary { min-height: 86px; display: grid; grid-template-columns: 1fr 34px; gap: 20px; align-items: center; cursor: pointer; list-style: none; font-size: 18px; font-weight: 850; }
     .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after { content: "+"; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--lime); transition: transform .25s,background .25s; }
+    .faq-item summary::after { content: "+"; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--lime); transition: transform .45s var(--ease-out),background .4s ease; }
     .faq-item[open] summary::after { transform: rotate(45deg); background: rgba(79,195,255,.09); }
     .faq-answer { max-width: 680px; padding: 0 54px 26px 0; color: var(--muted); }
     .faq-answer p { margin: 0; }
@@ -301,7 +325,7 @@
     .field { display: grid; gap: 8px; }
     .field-full { grid-column: 1 / -1; }
     .field label { color: var(--muted); font-size: 10px; font-weight: 1000; letter-spacing: .1em; text-transform: uppercase; }
-    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: #0c1119; transition: border-color .2s, background .2s; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: #0c1119; transition: border-color .4s ease, background .4s ease, box-shadow .4s ease; }
     .field input, .field select { min-height: 52px; padding: 0 14px; }
     .field textarea { min-height: 114px; padding: 14px; resize: vertical; }
     .field input:focus, .field textarea:focus, .field select:focus { outline: 0; border-color: var(--lime); background: #101827; }
@@ -325,20 +349,34 @@
     .lightbox-close { position: fixed; right: 20px; top: 18px; z-index: 2; width: 44px; height: 44px; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--text); background: var(--panel); font-size: 23px; cursor: pointer; }
     .lightbox-lock { overflow: hidden; }
 
-    .reveal { opacity: 1; transform: none; }
-    .reveal.pending { opacity: 0; transform: translateY(30px); transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1); }
-    .reveal.pending.visible { opacity: 1; transform: none; }
+    .level-card, .fact, .case-card, .journey-card, .format-card, .process-note, .learn-card, .price-card, .application {
+      will-change: transform;
+    }
+    .process-note, .case-card, .application {
+      transition: transform .55s var(--ease-out), border-color .45s ease, background .45s ease, box-shadow .55s var(--ease-out);
+    }
+    .process-note:hover, .case-card:hover, .application:hover {
+      transform: translateY(-4px);
+      border-color: var(--line-strong);
+      box-shadow: 0 22px 48px rgba(0,0,0,.2);
+    }
+
+    .reveal { opacity: 1; transform: none; filter: none; }
+    .reveal.pending { opacity: 0; transform: translateY(24px) scale(.985); filter: blur(7px); transition: opacity .85s var(--ease-soft), transform .85s var(--ease-out), filter .75s ease; transition-delay: var(--reveal-delay, 0ms); }
+    .reveal.pending.visible { opacity: 1; transform: none; filter: none; }
 
     @keyframes pulse { 50% { opacity: .55; box-shadow: 0 0 0 9px rgba(79,195,255,0),0 0 12px var(--lime); } }
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes marquee { to { transform: translateX(-50%); } }
+    @keyframes journey-flow { 0%,100% { transform: translateX(-72%); } 50% { transform: translateX(72%); } }
+    @keyframes journey-flow-mobile { 0%,100% { transform: translateY(-72%); } 50% { transform: translateY(72%); } }
 
     @media (max-width: 1060px) {
       .nav-links { display: none; }
       .hero-grid { grid-template-columns: 1fr .82fr; gap: 28px; }
       .hero-visual { min-height: 540px; }
       .proof-grid { grid-template-columns: 1fr; }
-      .proof-photo { min-height: 580px; }
+      .proof-photo { min-height: 470px; }
       .application { grid-template-columns: 1fr; }
       .application-copy { min-height: 380px; }
     }
@@ -362,15 +400,19 @@
       .stat:nth-child(2) { border-right: 0; }
       .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
       .levels { grid-template-columns: 1fr; }
-      .level-card { min-height: 300px; }
+      .level-card { min-height: 260px; }
       .case-top { grid-template-columns: 1fr; }
       .case-summary { min-height: 300px; border-right: 0; border-bottom: 1px solid var(--line); }
-      .case-body { grid-template-columns: 1fr; gap: 22px; }
-      .process { grid-template-columns: repeat(2,1fr); }
-      .step:nth-child(3n) { border-right: 1px solid var(--line); }
-      .step:nth-child(2n) { border-right: 0; }
-      .step:nth-last-child(-n+3) { border-bottom: 1px solid var(--line); }
-      .step:nth-last-child(-n+2) { border-bottom: 0; }
+      .journey { padding-top: 0; }
+      .journey-line { left: 28px; right: auto; top: 28px; bottom: 28px; width: 2px; height: auto; }
+      .journey-line::after { inset: 0; transform: translateY(-72%); background: linear-gradient(180deg,transparent,var(--lime),var(--violet),transparent); animation-name: journey-flow-mobile; }
+      .journey-list { grid-template-columns: 1fr; gap: 18px; }
+      .journey-step { display: grid; grid-template-columns: 58px 1fr; gap: 22px; align-items: start; }
+      .journey-number { margin: 0; }
+      .journey-card { min-height: 0; margin-top: 0; }
+      .format-grid { grid-template-columns: repeat(2,1fr); }
+      .format-head { align-items: flex-start; flex-direction: column; }
+      .process-footer { grid-template-columns: repeat(2,1fr); }
       .pricing-grid { grid-template-columns: 1fr; }
       .price-card { min-height: auto; }
       .price-card .button { margin-top: 20px; }
@@ -396,10 +438,15 @@
       .fact-grid { grid-template-columns: 1fr; }
       .proof-photo { min-height: 470px; }
       .case-shots { grid-template-columns: 1fr; }
-      .case-body, .case-summary { padding: 24px; }
-      .process { grid-template-columns: 1fr; }
-      .step, .step:nth-child(2n), .step:nth-child(3n), .step:nth-last-child(-n+3) { min-height: 250px; border-right: 0; border-bottom: 1px solid var(--line); }
-      .step:last-child { border-bottom: 0; }
+      .case-summary { padding: 24px; }
+      .journey-step { grid-template-columns: 48px 1fr; gap: 14px; }
+      .journey-number { width: 48px; height: 48px; box-shadow: 0 0 0 7px var(--bg),0 0 24px rgba(79,195,255,.2); }
+      .journey-line { left: 23px; top: 24px; bottom: 24px; }
+      .journey-card { padding: 23px; border-radius: 20px; }
+      .journey-card span { margin-bottom: 28px; }
+      .format-grid { grid-template-columns: 1fr; }
+      .format-card { min-height: 0; }
+      .format-card > span { margin-bottom: 34px; }
       .process-footer { grid-template-columns: 1fr; }
       .application-copy, .application-form { padding: 30px 22px; }
       .application-copy { min-height: 340px; }
@@ -414,7 +461,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-      .reveal.pending { opacity: 1; transform: none; }
+      .reveal.pending { opacity: 1; transform: none; filter: none; }
     }
   </style>
 </head>
@@ -443,7 +490,7 @@
           <div class="availability"><span class="availability-dot" aria-hidden="true"></span>Идёт набор на персональные тренировки</div>
           <span class="kicker">CS2 coaching / by mix3r</span>
           <h1>Играй<br><span class="outline-word">умнее.</span></h1>
-          <p class="hero-lead">Персональное обучение Counter-Strike 2 без воды: находим ошибки, перестраиваем решения и превращаем нестабильную игру в понятную систему.</p>
+          <p class="hero-lead">Находим ошибки. Меняем решения. Растём в ELO.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="https://t.me/mixertren" target="_blank" rel="noopener">Написать в Telegram <span class="arrow">↗</span></a>
             <a class="button" href="#results">Смотреть результаты <span aria-hidden="true">↓</span></a>
@@ -477,7 +524,7 @@
       <div class="container">
         <div class="section-head reveal">
           <div><span class="kicker">Опыт в цифрах</span><h2>Не теория.<br><span class="outline-word">Практика.</span></h2></div>
-          <p>5 лет на полупрофессиональном уровне и более 12 000 часов в игре. Передаю только то, что проверено в матчах, турнирах и работе с учениками.</p>
+          <p>5 лет на полупрофессиональном уровне. Только проверенные игровые решения.</p>
         </div>
         <div class="stats-strip reveal">
           <article class="stat"><span>Пиковое ELO в CS:GO</span><strong>4400</strong></article>
@@ -489,12 +536,12 @@
           <article class="level-card reveal">
             <span class="level-index" aria-hidden="true">03</span><span class="level-chip">Начальный уровень</span>
             <h3>У тебя 3 lvl?</h3>
-            <p>Разберём, почему рейтинг постоянно красный, научимся находить полезные киллы и реально влиять на исход раундов.</p>
+            <p>Уберём главные ошибки и научимся влиять на раунд.</p>
           </article>
           <article class="level-card reveal">
             <span class="level-index" aria-hidden="true">10</span><span class="level-chip">Продвинутый уровень</span>
             <h3>Застрял на 2000 ELO?</h3>
-            <p>Выстроим правильный подход к игре на высоком рейтинге. Ты начнёшь понимать каждое решение и его результат.</p>
+            <p>Сделаем решения осознанными, а игру — стабильной.</p>
           </article>
         </div>
       </div>
@@ -504,21 +551,17 @@
       <div class="container">
         <div class="section-head reveal">
           <div><span class="kicker">Почему мне доверяют</span><h2>Опыт,<br><span class="accent">который видно.</span></h2></div>
-          <p>Играл против сильных команд, выступал на LAN и проходил дистанцию в ESEA Main. Знаю давление соревновательной игры изнутри.</p>
+          <p>LAN, ESEA Main и матчи против сильных команд.</p>
         </div>
         <div class="proof-grid">
           <figure class="proof-photo reveal">
             <img src="./achievement.jpg" alt="mix3r с призовым чеком на турнире" width="1280" height="960" loading="lazy">
           </figure>
           <div class="fact-grid">
-            <article class="fact reveal"><span class="fact-number">01 / ELO</span><p>Пиковые 4400 ELO в CS:GO и 3500 ELO в CS2.</p></article>
-            <article class="fact reveal"><span class="fact-number">02 / LAN</span><p>Матч против команды из топ-40 мира на LAN-ивенте.</p></article>
-            <article class="fact reveal"><span class="fact-number">03 / WIN</span><p>Победа в главном полупрофессиональном турнире России в 2021.</p></article>
-            <article class="fact reveal"><span class="fact-number">04 / EVENT</span><p>Участие в Red Bull Flick LAN в формате 2×2.</p></article>
-            <article class="fact reveal"><span class="fact-number">05 / ESEA</span><p>Четыре сезона в ESEA Main и два выхода в плей-офф.</p></article>
-            <article class="fact reveal"><span class="fact-number">06 / HOURS</span><p>Более 12 000 часов соревновательной практики в CS.</p></article>
-            <article class="fact reveal"><span class="fact-number">07 / COACH</span><p>Два года индивидуальной работы с игроками разных уровней.</p></article>
-            <article class="fact reveal"><span class="fact-number">08 / PRIZE</span><p>Более $4 000 призовых за один соревновательный год.</p></article>
+            <article class="fact reveal"><span class="fact-number">01 / LAN</span><p>Матч против команды из топ-40 мира.</p></article>
+            <article class="fact reveal"><span class="fact-number">02 / WIN</span><p>Победа в главном полупрофессиональном турнире России.</p></article>
+            <article class="fact reveal"><span class="fact-number">03 / ESEA</span><p>4 сезона ESEA Main и 2 выхода в плей-офф.</p></article>
+            <article class="fact reveal"><span class="fact-number">04 / EVENT</span><p>Участник Red Bull Flick LAN 2×2.</p></article>
           </div>
         </div>
         <div class="proof-actions reveal">
@@ -532,13 +575,13 @@
       <div class="container">
         <div class="section-head reveal">
           <div><span class="kicker">Кейсы учеников</span><h2>Результат<br><span class="outline-word">в цифрах.</span></h2></div>
-          <p>Не обещания, а реальные изменения рейтинга и качества игры. Каждый план собирается под роль, уровень и цель ученика.</p>
+          <p>Реальные ученики. Реальный рост рейтинга.</p>
         </div>
         <div class="cases">
           <article class="case-card reveal">
             <div class="case-top">
               <div class="case-summary">
-                <div><span class="case-person">Кейс 01 · 15 тренировок</span><h3>Downlowd</h3></div>
+                <div><span class="case-person">Кейс 01 · 15 тренировок</span><h3>Downlowd</h3><p class="case-focus">AWP · дефолты · игровые решения</p></div>
                 <div class="elo-change">
                   <div class="elo-value"><span>Старт</span><strong>~800</strong></div><span class="elo-arrow">→</span><div class="elo-value"><span>Результат</span><strong class="accent">1530</strong></div>
                 </div>
@@ -548,17 +591,12 @@
                 <figure class="case-shot"><button type="button" data-lightbox-src="./downlowd-after.jpg" data-lightbox-caption="Downlowd — после обучения"><img src="./downlowd-after.jpg" alt="Статистика Downlowd после обучения" width="1137" height="752" loading="lazy"><span class="shot-label">После обучения</span></button></figure>
               </div>
             </div>
-            <div class="case-body">
-              <div class="case-detail"><span>Точка А</span><p>700–900 ELO. Хотел апнуть 8 уровень, но не мог стабильно влиять на игру.</p></div>
-              <div class="case-detail"><span>Что сделали</span><p>Перешли с рифлы на AWP, выучили дефолты, дебюты и проработали решения.</p></div>
-              <div class="case-detail"><span>Результат</span><p>К октябрю 2025 апнул 1530 ELO и выполнил поставленную цель.</p></div>
-            </div>
           </article>
 
           <article class="case-card reveal">
             <div class="case-top">
               <div class="case-summary">
-                <div><span class="case-person">Кейс 02 · 10 тренировок</span><h3>Ygenius</h3></div>
+                <div><span class="case-person">Кейс 02 · 10 тренировок</span><h3>Ygenius</h3><p class="case-focus">Роль · демки · стабильность</p></div>
                 <div class="elo-change">
                   <div class="elo-value"><span>Старт</span><strong>~1800</strong></div><span class="elo-arrow">→</span><div class="elo-value"><span>Результат</span><strong class="accent">2500+</strong></div>
                 </div>
@@ -567,11 +605,6 @@
                 <figure class="case-shot"><button type="button" data-lightbox-src="./genius-before.jpg" data-lightbox-caption="YGENIUS — до обучения"><img src="./genius-before.jpg" alt="Статистика YGENIUS до обучения" width="1080" height="839" loading="lazy"><span class="shot-label">До обучения</span></button></figure>
                 <figure class="case-shot"><button type="button" data-lightbox-src="./genius-after.jpg" data-lightbox-caption="YGENIUS — после обучения"><img src="./genius-after.jpg" alt="Статистика YGENIUS после обучения" width="1066" height="774" loading="lazy"><span class="shot-label">После обучения</span></button></figure>
               </div>
-            </div>
-            <div class="case-body">
-              <div class="case-detail"><span>Точка А</span><p>Качели на 1800 ELO: хорошие матчи постоянно сменялись провальными.</p></div>
-              <div class="case-detail"><span>Что сделали</span><p>Подобрали роль, разобрали старты и демки, подключили совместные игры.</p></div>
-              <div class="case-detail"><span>Результат</span><p>К декабрю 2025 закрепился на 2500 ELO с хорошей статистикой.</p></div>
             </div>
           </article>
         </div>
@@ -582,25 +615,32 @@
       <div class="container">
         <div class="section-head reveal">
           <div><span class="kicker">Как проходит обучение</span><h2>От ошибки<br><span class="accent">к системе.</span></h2></div>
-          <p>Это не лекция на час. Мы работаем с твоей реальной игрой, сразу применяем правки и фиксируем следующий шаг.</p>
+          <p>Три шага от проблемы до понятного плана.</p>
         </div>
-        <div class="process">
-          <article class="step reveal"><span class="step-number">01</span><h3>Определяем цель</h3><p>Фиксируем текущий уровень и находим то, что сильнее всего тормозит рост.</p></article>
-          <article class="step reveal"><span class="step-number">02</span><h3>Разбираем игру</h3><p>Смотрим демку, экран или конкретные раунды и находим повторяющиеся ошибки.</p></article>
-          <article class="step reveal"><span class="step-number">03</span><h3>Показываю решение</h3><p>Разбираем позиции, тайминги, выбор дуэлей и логику каждого действия.</p></article>
-          <article class="step reveal"><span class="step-number">04</span><h3>Закрепляем</h3><p>Применяем правки сразу: в совместной игре или живом разборе матча.</p></article>
-          <article class="step reveal"><span class="step-number">05</span><h3>Собираем план</h3><p>После занятия остаются упражнения и два–три понятных приоритета.</p></article>
-          <article class="step reveal"><span class="step-number">06</span><h3>Проверяем прогресс</h3><p>Смотрим, что закрепилось, и корректируем план под новые задачи.</p></article>
+        <div class="journey">
+          <div class="journey-line" aria-hidden="true"></div>
+          <div class="journey-list">
+            <article class="journey-step reveal"><span class="journey-number">01</span><div class="journey-card" data-stage="1"><span>Старт</span><h3>Диагностика</h3><p>Определяем цель, роль и главную ошибку, которая сильнее всего тормозит рост.</p></div></article>
+            <article class="journey-step reveal"><span class="journey-number">02</span><div class="journey-card" data-stage="2"><span>Работа</span><h3>Разбор + практика</h3><p>Смотрим демку и ключевые раунды. Сразу исправляем решения, тайминги и позиции.</p></div></article>
+            <article class="journey-step reveal"><span class="journey-number">03</span><div class="journey-card" data-stage="3"><span>Результат</span><h3>План роста</h3><p>После занятия остаются упражнения, 2–3 приоритета и понятный план до следующей тренировки.</p></div></article>
+          </div>
+        </div>
+        <div class="format-head reveal"><div><span class="kicker">Формат под задачу</span><h3>Как можем работать</h3></div><p>Выбираем подход под твою цель и текущий уровень.</p></div>
+        <div class="format-grid">
+          <article class="format-card reveal"><span>01 / Точечно</span><h3>Конкретный разбор</h3><p>Фокус на одной проблеме: стрельбе, экономике или другом слабом месте.</p></article>
+          <article class="format-card reveal"><span>02 / База</span><h3>Обучение с нуля</h3><p>От простых механик до ключевых принципов игры.</p></article>
         </div>
         <div class="process-footer reveal">
-          <div class="process-note"><span>Для кого подходят тренировки</span><strong>Для игроков до 2800 ELO FACEIT.</strong><p>Подходит и тем, кто только начинает играть рейтинг, и тем, кто уже упёрся в свой потолок. Сначала определяем роль, текущие ошибки и цель, затем разбираем демки, решения, тайминги, движение и игровые ситуации именно твоего уровня.</p></div>
-          <div class="process-note"><span>После занятия</span><strong>Запись, правки и следующий шаг.</strong></div>
+          <div class="process-note"><span>Подготовка</span><strong>Вопросы + демка любого матча.</strong></div>
+          <div class="process-note"><span>Ограничение</span><strong>Беру игроков до 2800 ELO.</strong></div>
+          <div class="process-note"><span>Гарантия</span><strong>Следуешь рекомендациям и тренируешься ежедневно — растёшь в ELO.</strong></div>
+          <div class="process-note"><span>Где занимаемся</span><strong>Discord · Телемост · Google Meet.</strong></div>
         </div>
         <div class="learn-head reveal"><span class="kicker">Чему ты научишься</span><h3>Понимать раунд, а не просто реагировать.</h3></div>
         <div class="learn-grid">
-          <article class="learn-card reveal"><span class="learn-code">Механика</span><h3>Выигрывать дуэли</h3><p>Настроим движение, выходы, постановку прицела и выбор позиции. Ты поймёшь, когда принимать бой, а когда сохранить преимущество.</p></article>
-          <article class="learn-card reveal"><span class="learn-code">Макро</span><h3>Читать карту</h3><p>Разберём тайминги, контроль пространства, ротации и реакцию на информацию. Решения перестанут быть случайными.</p></article>
-          <article class="learn-card reveal"><span class="learn-code">Стабильность</span><h3>Закрывать матчи</h3><p>Научишься управлять экономикой, сохранять влияние в сложных играх и не отдавать преимущество серией необдуманных действий.</p></article>
+          <article class="learn-card reveal"><span class="learn-code">Faceit</span><h3>Играть на победу</h3><p>Больше полезных фрагов и влияния на раунд.</p></article>
+          <article class="learn-card reveal"><span class="learn-code">Game sense</span><h3>Понимать игру</h3><p>Тайминги, экономика и геометрия карты.</p></article>
+          <article class="learn-card reveal"><span class="learn-code">Исполнение</span><h3>Играть чище</h3><p>Мувмент, правильные раскидки и фокус.</p></article>
         </div>
       </div>
     </section>
@@ -609,33 +649,33 @@
       <div class="container">
         <div class="section-head reveal">
           <div><span class="kicker">Форматы обучения</span><h2>Выбери свой<br><span class="outline-word">темп роста.</span></h2></div>
-          <p>Начни с одной тренировки или возьми системную программу с поддержкой между занятиями.</p>
+          <p>Одна тренировка или полноценная программа.</p>
         </div>
         <div class="pricing-grid">
           <article class="price-card reveal">
             <span class="price-badge">Знакомство</span><h3>Разовая тренировка</h3><span class="duration">1 занятие · 60 минут</span><div class="price">1 500 ₽</div>
-            <ul class="price-list"><li>Разбор проблемы по запросу</li><li>Проверка игры на роли</li><li>Конкретные точки роста</li><li>План самостоятельной работы</li></ul>
+            <ul class="price-list"><li>Разбор главной проблемы</li><li>Правки по роли</li><li>План работы</li></ul>
             <a class="button" href="#application" data-format="Разовая тренировка — 1500 ₽">Выбрать формат</a>
           </article>
           <article class="price-card featured reveal">
             <span class="price-badge">Популярный · −10%</span><h3>Краткосрочное обучение</h3><span class="duration">4 занятия · по 60 минут</span><div class="price">5 400 ₽</div>
-            <ul class="price-list"><li>Записи всех занятий</li><li>Постоянная связь в чате</li><li>Ответы на вопросы по игре</li><li>Последовательный план роста</li></ul>
+            <ul class="price-list"><li>Записи занятий</li><li>Связь в чате</li><li>Системный план роста</li></ul>
             <a class="button button-primary" href="#application" data-format="4 занятия — 5400 ₽">Выбрать формат</a>
           </article>
           <article class="price-card reveal">
             <span class="price-badge">Максимум · −15%</span><h3>Долгосрочное обучение</h3><span class="duration">10 занятий · по 60 минут</span><div class="price">12 750 ₽</div>
-            <ul class="price-list"><li>Всё из короткой программы</li><li>Приоритетная запись</li><li>Индивидуальные гайды</li><li>Глубокая работа с привычками</li></ul>
+            <ul class="price-list"><li>Всё из пакета на 4 занятия</li><li>Приоритетная запись</li><li>Индивидуальные гайды</li></ul>
             <a class="button" href="#application" data-format="10 занятий — 12750 ₽">Выбрать формат</a>
           </article>
         </div>
         <div class="payment reveal"><span>Оплата: <strong>TG-кошелёк · крипта · карта РФ · Boosty</strong></span><span>Связь: <strong>Discord · Телемост · Google Meet</strong></span></div>
         <div class="faq" id="faq">
-          <div class="faq-intro reveal"><span class="kicker">Перед стартом</span><h3>Частые вопросы</h3><p>Коротко о том, чего ждать от первого занятия и как получить максимум пользы.</p></div>
+          <div class="faq-intro reveal"><span class="kicker">Перед стартом</span><h3>Частые вопросы</h3></div>
           <div class="faq-list reveal">
-            <details class="faq-item"><summary>Гарантируешь рост ELO?</summary><div class="faq-answer"><p>Гарантировать конкретную цифру рейтинга было бы нечестно. Я даю систему решений, упражнения и обратную связь. Результат приходит, когда ты применяешь правки в матчах и выполняешь план между занятиями.</p></div></details>
-            <details class="faq-item"><summary>Какой рейтинг нужен для обучения?</summary><div class="faq-answer"><p>Можно приходить с начального уровня и вплоть до 2800 ELO Faceit. Сложность материала подстраивается под твой опыт: новичка не перегружаю продвинутой теорией, а сильного игрока не заставляю повторять очевидную базу.</p></div></details>
-            <details class="faq-item"><summary>Что подготовить к первому занятию?</summary><div class="faq-answer"><p>Текущее ELO, основную роль, ссылку на Faceit, одну–две показательные демки и конкретную цель. На старте определим главную проблему и выберем приоритет, который даст самый заметный эффект.</p></div></details>
-            <details class="faq-item"><summary>Что входит в тренировку?</summary><div class="faq-answer"><p>Разбор реальной игры, объяснение логики решений, практические правки и понятный следующий шаг. В пакетах остаются записи занятий и связь в чате для вопросов по ситуациям из матчей.</p></div></details>
+            <details class="faq-item"><summary>Гарантируешь рост ELO?</summary><div class="faq-answer"><p>Да — при соблюдении рекомендаций и ежедневной практике.</p></div></details>
+            <details class="faq-item"><summary>Какой рейтинг нужен?</summary><div class="faq-answer"><p>От начального уровня до 2800 ELO Faceit.</p></div></details>
+            <details class="faq-item"><summary>Что подготовить?</summary><div class="faq-answer"><p>ELO, роль, Faceit, демку и цель.</p></div></details>
+            <details class="faq-item"><summary>Что входит?</summary><div class="faq-answer"><p>Разбор игры, правки, упражнения и следующий шаг.</p></div></details>
           </div>
         </div>
       </div>
@@ -644,14 +684,13 @@
     <section class="section" id="application">
       <div class="container">
         <div class="application reveal">
-          <div class="application-copy"><span class="kicker">Твой следующий ранг</span><h2>Готов<br>начать?</h2><p>Заполни короткую заявку. После отправки откроется чат <strong>@mixertren</strong> с уже готовым сообщением.</p></div>
+          <div class="application-copy"><span class="kicker">Твой следующий ранг</span><h2>Готов<br>начать?</h2><p>Заполни заявку — откроется чат <strong>@mixertren</strong>.</p></div>
           <form class="application-form" id="leadForm">
             <div class="field-grid">
               <div class="field"><label for="name">Твой ник</label><input id="name" name="name" placeholder="Например, simple" autocomplete="nickname" required></div>
               <div class="field"><label for="elo">Текущее ELO</label><input id="elo" name="elo" placeholder="Например, 1500" inputmode="numeric" required></div>
               <div class="field field-full"><label for="format">Формат</label><select id="format" name="format" required><option value="" selected disabled>Выбери формат обучения</option><option>Разовая тренировка — 1500 ₽</option><option>4 занятия — 5400 ₽</option><option>10 занятий — 12750 ₽</option><option>Хочу обсудить формат</option></select></div>
               <div class="field field-full"><label for="goal">Что хочешь улучшить?</label><textarea id="goal" name="goal" placeholder="Опиши проблему, цель и текущую роль" required></textarea></div>
-              <div class="field field-full"><label for="demo">Faceit / дополнительная информация</label><textarea id="demo" name="demo" placeholder="Ссылка на профиль или важный комментарий"></textarea></div>
             </div>
             <div class="form-footer"><button class="button button-primary" type="submit">Отправить в Telegram <span class="arrow">↗</span></button><div class="form-status" id="formStatus" role="status" aria-live="polite"></div></div>
           </form>
@@ -696,9 +735,18 @@
         navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${active}`));
       };
 
-      addEventListener('scroll', onScroll, { passive: true });
-      addEventListener('resize', onScroll, { passive: true });
-      onScroll();
+      let scrollFrame = 0;
+      const requestScrollUpdate = () => {
+        if (scrollFrame) return;
+        scrollFrame = requestAnimationFrame(() => {
+          scrollFrame = 0;
+          onScroll();
+        });
+      };
+
+      addEventListener('scroll', requestScrollUpdate, { passive: true });
+      addEventListener('resize', requestScrollUpdate, { passive: true });
+      requestScrollUpdate();
 
       menuButton.addEventListener('click', () => {
         const open = nav.classList.toggle('open');
@@ -709,10 +757,18 @@
 
       if (!reduceMotion && 'IntersectionObserver' in window) {
         const items = $$('.reveal');
-        items.forEach(item => item.classList.add('pending'));
+        items.forEach((item, index) => {
+          item.classList.add('pending');
+          item.style.setProperty('--reveal-delay', `${(index % 3) * 65}ms`);
+        });
         const observer = new IntersectionObserver(entries => {
           entries.forEach(entry => {
             if (!entry.isIntersecting) return;
+            const cleanup = () => {
+              entry.target.classList.remove('pending', 'visible');
+              entry.target.style.removeProperty('--reveal-delay');
+            };
+            entry.target.addEventListener('transitionend', cleanup, { once: true });
             entry.target.classList.add('visible');
             observer.unobserve(entry.target);
           });
