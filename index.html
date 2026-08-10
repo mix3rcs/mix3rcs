@@ -1,2301 +1,792 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/><link as="image" fetchpriority="high" href="./hero.jpg" rel="preload" type="image/jpeg"/>
-<meta content="mix3r — индивидуальное обучение Counter-Strike 2 для Faceit, Premier, MM и других форматов: демки, роли, тайминги, экономика и рост ELO." name="description"/>
-<meta content="#050505" name="theme-color"/>
-<link href="./favicon.ico" rel="icon" sizes="any"/>
-<link href="./favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
-<link href="./apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
-<title>mix3r — индивидуальное обучение CS2</title>
-<style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Индивидуальное обучение Counter-Strike 2 с mix3r: разбор демок, роли, тайминги, экономика и системный рост ELO.">
+  <meta name="theme-color" content="#070907">
+  <meta property="og:title" content="mix3r — индивидуальное обучение CS2">
+  <meta property="og:description" content="Пойми игру глубже. Играй стабильнее. Расти в ELO с персональным планом тренировок.">
+  <meta property="og:image" content="./hero.jpg">
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
+  <link rel="preload" href="./hero.jpg" as="image" type="image/jpeg" fetchpriority="high">
+  <title>mix3r — индивидуальное обучение CS2</title>
+  <style>
     :root {
-      --bg: #050505;
-      --bg-2: #090909;
-      --surface: #0c0c0c;
-      --surface-2: #111;
-      --text: #f5f5f3;
-      --muted: #aaa;
-      --line: rgba(255,255,255,.15);
-      --line-strong: rgba(255,255,255,.35);
-      --paper: #f2f2ef;
-      --ink: #090909;
-      --radius: 10px;
-      --container: 1320px;
-      --shadow: 0 18px 50px rgba(0,0,0,.32);
+      --bg: #070907;
+      --bg-soft: #0b0e0b;
+      --panel: #111511;
+      --panel-2: #151a15;
+      --text: #f3f5ec;
+      --muted: #9da49a;
+      --line: rgba(226, 255, 205, .13);
+      --line-strong: rgba(226, 255, 205, .28);
+      --lime: #b9ff45;
+      --cyan: #55dfff;
+      --violet: #ba82ff;
+      --orange: #ff9766;
+      --danger: #ff4d5f;
+      --radius: 22px;
+      --container: 1240px;
+      --header: 74px;
+      --mx: 50%;
+      --my: 20%;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
-
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header) + 18px); }
     body {
       margin: 0;
+      min-width: 320px;
       color: var(--text);
       background:
-        radial-gradient(circle at 75% 0%, rgba(255,255,255,.035), transparent 28%),
-        linear-gradient(180deg, #050505 0%, #080808 55%, #050505 100%);
-      font-family: Inter, Arial, Helvetica, sans-serif;
+        radial-gradient(700px circle at var(--mx) var(--my), rgba(185, 255, 69, .055), transparent 48%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       line-height: 1.5;
       overflow-x: hidden;
     }
 
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      opacity: .17;
+      background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: linear-gradient(to bottom, black, transparent 68%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+    }
+
+    ::selection { color: #070907; background: var(--lime); }
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; }
     button, input, textarea, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
 
-    .container {
-      width: min(calc(100% - 36px), var(--container));
-      margin-inline: auto;
+    .container { width: min(calc(100% - 40px), var(--container)); margin-inline: auto; }
+    .section { position: relative; padding: 112px 0; }
+    .section + .section { border-top: 1px solid var(--line); }
+    .skip-link { position: fixed; left: 16px; top: -80px; z-index: 1000; padding: 12px 16px; color: #070907; background: var(--lime); font-weight: 900; }
+    .skip-link:focus { top: 16px; }
+
+    .progress {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 300;
+      height: 2px;
+      transform: scaleX(0);
+      transform-origin: left;
+      background: linear-gradient(90deg, var(--lime), var(--cyan));
+      box-shadow: 0 0 18px rgba(185,255,69,.55);
     }
 
     .header {
       position: fixed;
       inset: 0 0 auto;
-      z-index: 100;
+      z-index: 200;
+      transition: background .25s ease, border-color .25s ease, transform .25s ease;
       border-bottom: 1px solid transparent;
-      transition: .2s ease;
     }
-
-    .header.scrolled {
-      background: rgba(5,5,5,.92);
-      border-color: var(--line);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav {
-      min-height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .brand {
-      font-size: 24px;
-      font-weight: 1000;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .04em;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--text); }
+    .header.scrolled { border-color: var(--line); background: rgba(7,9,7,.84); backdrop-filter: blur(18px) saturate(130%); }
+    .nav { min-height: var(--header); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 1000; letter-spacing: -.04em; font-size: 24px; }
+    .brand-mark { width: 12px; height: 12px; background: var(--lime); box-shadow: 0 0 20px rgba(185,255,69,.7); transform: rotate(45deg); }
+    .nav-links { display: flex; align-items: center; gap: 6px; padding: 5px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.025); }
+    .nav-links a { padding: 8px 12px; border-radius: 999px; color: var(--muted); font-size: 12px; font-weight: 800; transition: color .2s, background .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
+    .menu-button { display: none; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 14px; color: var(--text); background: var(--panel); cursor: pointer; }
 
     .button {
-      min-height: 46px;
-      padding: 0 18px;
+      min-height: 50px;
+      padding: 0 20px;
       position: relative;
-      overflow: hidden;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      font-weight: 950;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+      font-weight: 900;
       cursor: pointer;
-      will-change: transform, box-shadow;
-      transition:
-        transform .28s cubic-bezier(.2,.8,.2,1),
-        background-color .28s ease,
-        color .28s ease,
-        border-color .28s ease,
-        box-shadow .32s ease;
-    }
-
-    .button::after {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      pointer-events: none;
-      background: linear-gradient(
-        110deg,
-        transparent 20%,
-        rgba(255,255,255,.08) 38%,
-        rgba(255,255,255,.52) 50%,
-        rgba(255,255,255,.08) 62%,
-        transparent 80%
-      );
-      transform: translateX(-145%);
-      transition: transform .72s cubic-bezier(.2,.75,.2,1);
-    }
-
-    .button:hover,
-    .button:focus-visible {
-      transform: translateY(-3px);
-      border-color: rgba(255,255,255,.72);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.12),
-        0 0 24px rgba(255,255,255,.28),
-        0 12px 30px rgba(0,0,0,.34);
-      outline: none;
-    }
-
-    .button:hover::after,
-    .button:focus-visible::after {
-      transform: translateX(145%);
-    }
-
-    .button:active {
-      transform: translateY(-1px) scale(.985);
-      box-shadow: 0 0 16px rgba(255,255,255,.18);
-    }
-
-    .button-primary {
-      color: var(--ink);
-      background: var(--paper);
-    }
-
-    .button-primary:hover,
-    .button-primary:focus-visible {
-      background: #fff;
-    }
-
-    .button-secondary {
-      color: var(--text);
-      background: transparent;
-      border-color: var(--line);
-    }
-
-    .button-secondary:hover,
-    .button-secondary:focus-visible {
-      background: rgba(255,255,255,.085);
-    }
-
-    .menu-button {
-      display: none;
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      color: var(--text);
-      background: var(--surface);
-      cursor: pointer;
-    }
-
-    .hero {
-      min-height: auto;
-      padding: 92px 0 0;
-      border-bottom: 0;
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, .78fr) minmax(500px, 1.22fr);
-      gap: 26px;
-      align-items: stretch;
-    }
-
-    .hero-copy {
-      padding: 54px 0 36px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-    }
-
-    .hero-copy .eyebrow {
-      margin-left: 2px;
-      margin-bottom: 16px;
-    }
-
-    .hero-copy h1 {
-      margin-left: -2px;
-      margin-bottom: 22px;
-    }
-
-    .eyebrow,
-    .section-title {
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    .eyebrow {
-      margin-bottom: 14px;
-      color: var(--text);
-      font-size: 13px;
-    }
-
-    h1, h2, h3, p { margin-top: 0; }
-
-    h1 {
-      margin-bottom: 18px;
-      font-size: clamp(56px, 5.6vw, 86px);
-      line-height: .86;
-      letter-spacing: -.055em;
-      text-transform: uppercase;
-      text-wrap: balance;
-    }
-
-    h2 {
-      margin-bottom: 12px;
-      font-size: clamp(29px, 4vw, 52px);
-      line-height: 1;
-      letter-spacing: -.04em;
-      text-transform: uppercase;
-    }
-
-    h3 {
-      margin-bottom: 9px;
-      font-size: 21px;
-      line-height: 1.2;
-    }
-
-    .lead {
-      max-width: 650px;
-      color: var(--muted);
-      font-size: clamp(17px, 1.75vw, 20px);
-      text-wrap: pretty;
-    }
-
-    .hero-actions,
-    .inline-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-
-    .hero-media {
-      min-height: 620px;
-      display: grid;
-      grid-template-columns: 1fr 170px;
-      border-left: 1px solid var(--line);
-      border-right: 1px solid var(--line);
-      background: var(--surface);
-      overflow: hidden;
-    }
-
-    .hero-photo-frame {
-      min-width: 0;
-      height: 100%;
-      overflow: hidden;
-      background: #080808;
-    }
-
-    .hero-photo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    /* Нейтральное наведение без белого свечения */
-    .photo-hover {
-      position: relative;
-      isolation: isolate;
-      overflow: hidden;
-      transform: translateZ(0);
-      transition:
-        transform .46s cubic-bezier(.2,.7,.2,1),
-        border-color .46s ease;
-    }
-
-    .photo-hover img {
-      transition:
-        transform .52s cubic-bezier(.2,.7,.2,1),
-        filter .52s ease;
-      will-change: transform, filter;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .photo-hover:hover,
-      .photo-hover:focus-visible {
-        z-index: 3;
-        transform: translateY(-3px);
-        border-color: rgba(255,255,255,.28);
-      }
-
-      .photo-hover:hover img,
-      .photo-hover:focus-visible img {
-        transform: scale(1.026);
-        filter: brightness(1.025) contrast(1.015);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .photo-hover,
-      .photo-hover img {
-        transition-duration: .01ms !important;
-      }
-    }
-
-    .hero-stats {
-      display: grid;
-      align-content: center;
-      padding: 0 16px;
-      background: #080808;
-    }
-
-    .hero-stat {
-      padding: 24px 6px;
-      text-align: center;
-      border-bottom: 1px solid var(--line-strong);
-    }
-
-    .hero-stat:last-child { border-bottom: 0; }
-    .hero-stat strong { display: block; font-size: 31px; line-height: 1; }
-    .hero-stat span { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
-
-    .section {
-      padding: 94px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 26px;
-      font-size: clamp(24px, 3vw, 36px);
-    }
-
-    .section-title::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--line-strong);
-    }
-
-    .elo-overview {
-      margin-top: 26px;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.012);
-    }
-
-    .elo-overview-item {
-      min-height: 220px;
-      padding: 34px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-right: 1px solid var(--line);
-    }
-
-    .elo-overview-item:last-child { border-right: 0; }
-
-    .elo-overview-item span {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .elo-overview-item strong {
-      display: block;
-      margin: 10px 0 12px;
-      font-size: clamp(42px, 6vw, 74px);
-      line-height: .92;
-      letter-spacing: -.045em;
-    }
-
-    .elo-overview-item p {
-      max-width: 480px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.015);
-      box-shadow: var(--shadow);
-    }
-
-    .trust-grid {
-      display: grid;
-      grid-template-columns: minmax(300px, .9fr) minmax(360px, 1.1fr);
-      gap: 16px;
-      align-items: stretch;
-    }
-
-    .fact-list {
-      padding: 24px;
-      display: grid;
-      gap: 18px;
-    }
-
-    .fact {
-      display: grid;
-      grid-template-columns: 30px 1fr;
-      gap: 12px;
-      align-items: start;
-      color: var(--muted);
-    }
-
-    .fact-icon {
-      width: 30px;
-      height: 30px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line-strong);
-      border-radius: 50%;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 900;
-    }
-
-    .achievement-photo {
-      width: 100%;
-      height: 100%;
-      min-height: 440px;
-      object-fit: cover;
-    }
-
-
-    .case-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr));
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .case-card {
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.012);
-    }
-
-    .case-media {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .case-shot {
-      margin: 0;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: #080808;
-    }
-
-    .case-shot img {
-      width: 100%;
-      height: 100%;
-      max-width: none;
-      object-fit: contain;
-      object-position: center;
-      transition: transform .2s ease, filter .2s ease;
-    }
-
-    .case-image-button {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      padding: 0;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      border: 0;
-      color: var(--text);
-      background: #050505;
-      cursor: zoom-in;
-      text-align: left;
-    }
-
-    .case-image-button:focus-visible {
-      outline: 2px solid var(--paper);
-      outline-offset: -2px;
-    }
-
-    .case-zoom {
-      position: absolute;
-      right: 8px;
-      bottom: 8px;
-      padding: 6px 9px;
-      border: 1px solid rgba(255,255,255,.3);
-      background: rgba(0,0,0,.78);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      pointer-events: none;
-    }
-
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      z-index: 300;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
-      background: rgba(0,0,0,.94);
-      backdrop-filter: blur(8px);
-    }
-
-    .lightbox.open { display: flex; }
-
-    .lightbox-dialog {
-      width: min(96vw, 1500px);
-      max-height: 94vh;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr) auto;
-      border: 1px solid var(--line-strong);
-      background: #050505;
-      box-shadow: 0 30px 100px rgba(0,0,0,.65);
-    }
-
-    .lightbox-image-wrap {
-      min-height: 0;
-      display: grid;
-      place-items: center;
-      overflow: auto;
-      background: #000;
-    }
-
-    .lightbox-image {
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      max-height: calc(94vh - 72px);
-      object-fit: contain;
-    }
-
-    .lightbox-bar {
-      min-height: 62px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .lightbox-original {
-      color: var(--text);
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .lightbox-close {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 301;
-      width: 46px;
-      height: 46px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.38);
-      background: #090909;
-      color: #fff;
-      font-size: 28px;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    body.lightbox-lock { overflow: hidden; }
-
-    .case-shot figcaption {
-      padding: 8px 10px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .case-body {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 120px;
-      gap: 16px;
-      align-items: stretch;
-      flex: 1;
-    }
-
-    .case-copy p,
-    .case-copy li { color: var(--muted); }
-
-    .case-copy ul {
-      margin: 8px 0 0;
-      padding-left: 18px;
-    }
-
-    .case-result {
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .elo-box {
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border: 1px solid var(--line-strong);
-      background: #090909;
-    }
-
-    .elo-box span { color: var(--muted); font-size: 12px; text-transform: uppercase; }
-    .elo-box strong { display: block; margin-top: 4px; font-size: 27px; line-height: 1; }
-
-    .pricing-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.65fr) minmax(340px, .85fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .price-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .price-card {
-      min-height: 100%;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid var(--line-strong);
-      background: #080808;
-      position: relative;
-    }
-
-    .price-card h3 { text-align: center; text-transform: uppercase; }
-    .price-card .duration { text-align: center; color: var(--muted); font-size: 12px; text-transform: uppercase; }
-    .price { margin: 20px 0; text-align: center; font-size: 38px; font-weight: 1000; }
-
-    .discount {
-      position: absolute;
-      top: -1px;
-      right: -1px;
-      padding: 8px 10px;
-      color: var(--ink);
-      background: var(--paper);
-      font-size: 12px;
-      font-weight: 1000;
-    }
-
-    .list {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 10px;
-    }
-
-    .list li {
-      position: relative;
-      padding-left: 16px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .list li::before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: var(--text);
-      font-weight: 900;
-    }
-
-    .payment-details {
-      margin-top: 12px;
-      display: grid;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.012);
-    }
-
-    .payment-line {
-      min-height: 48px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-align: center;
-      color: var(--text);
-      font-size: 13px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-    }
-
-    .payment-line + .payment-line {
-      border-top: 1px solid var(--line);
-    }
-
-    .payment-line span {
-      color: var(--accent-lime);
-    }
-
-    .payment-line strong {
-      color: #fff;
-      font: inherit;
-    }
-
-    .payment-contact span {
-      color: var(--accent-cyan);
-    }
-
-    @media (max-width: 620px) {
-      .payment-line {
-        flex-direction: column;
-        gap: 4px;
-      }
-    }
-
-    .form-card {
-      padding: 24px;
-      border: 1px solid var(--line);
-      background: #080808;
-    }
-
-    .form-card p { color: var(--muted); }
-
-    .field-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .field { display: grid; gap: 7px; }
+      transition: transform .25s cubic-bezier(.2,.75,.2,1), border-color .25s, background .25s, box-shadow .25s;
+    }
+    .button::before { content: ""; position: absolute; inset: 0; transform: translateX(-110%); background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.28), transparent 70%); transition: transform .65s ease; }
+    .button:hover { transform: translateY(-3px); border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); box-shadow: 0 14px 34px rgba(0,0,0,.28); }
+    .button:hover::before { transform: translateX(110%); }
+    .button-primary { color: #091007; border-color: var(--lime); background: var(--lime); box-shadow: 0 0 30px rgba(185,255,69,.14); }
+    .button-primary:hover { border-color: #d4ff8c; background: #d4ff8c; box-shadow: 0 14px 40px rgba(185,255,69,.22); }
+    .button-small { min-height: 44px; padding-inline: 17px; border-radius: 12px; font-size: 13px; }
+    .arrow { transition: transform .2s; }
+    .button:hover .arrow { transform: translate(3px,-3px); }
+
+    .kicker { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; color: var(--lime); font-size: 12px; font-weight: 1000; letter-spacing: .14em; text-transform: uppercase; }
+    .kicker::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .display, h1, h2, h3 { margin-top: 0; font-weight: 1000; letter-spacing: -.045em; }
+    h1 { margin-bottom: 24px; font-size: clamp(64px, 9.3vw, 142px); line-height: .78; text-transform: uppercase; }
+    h2 { margin-bottom: 18px; font-size: clamp(42px, 6vw, 78px); line-height: .92; text-transform: uppercase; }
+    h3 { margin-bottom: 10px; font-size: 24px; line-height: 1.08; }
+    p { margin-top: 0; }
+    .muted { color: var(--muted); }
+    .accent { color: var(--lime); }
+    .outline-word { color: transparent; -webkit-text-stroke: 1px rgba(243,245,236,.72); }
+    .section-head { margin-bottom: 46px; display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,.5fr); gap: 40px; align-items: end; }
+    .section-head p { max-width: 520px; margin: 0 0 4px auto; color: var(--muted); font-size: 18px; }
+
+    .hero { min-height: 100svh; padding: calc(var(--header) + 48px) 0 34px; display: flex; align-items: center; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0,1.02fr) minmax(400px,.98fr); gap: 48px; align-items: center; }
+    .hero-copy { position: relative; z-index: 2; }
+    .availability { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 36px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: rgba(255,255,255,.025); font-size: 12px; font-weight: 750; }
+    .availability-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 5px rgba(185,255,69,.1), 0 0 18px var(--lime); animation: pulse 2s ease-in-out infinite; }
+    .hero-lead { max-width: 680px; margin-bottom: 0; color: #c8cec4; font-size: clamp(18px, 2vw, 23px); line-height: 1.45; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .hero-note { display: flex; align-items: center; gap: 12px; margin-top: 28px; color: var(--muted); font-size: 13px; }
+    .hero-note-avatar { width: 36px; height: 36px; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 50%; }
+    .hero-note-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .hero-visual { position: relative; min-height: 630px; }
+    .hero-frame { position: absolute; inset: 0 0 42px 28px; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 32px; background: var(--panel); transform: rotate(1.5deg); box-shadow: 0 40px 90px rgba(0,0,0,.45); }
+    .hero-frame::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, transparent 55%, rgba(4,7,4,.83)), linear-gradient(90deg, rgba(7,9,7,.25), transparent 40%); }
+    .hero-frame::after { content: ""; position: absolute; inset: 0; z-index: 1; border: 1px solid rgba(255,255,255,.08); border-radius: inherit; }
+    .hero-frame img { width: 100%; height: 100%; object-fit: cover; object-position: 55% center; filter: saturate(.9) contrast(1.05); transform: scale(1.04); transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .8s; }
+    .hero-frame:hover img { transform: scale(1.08); filter: saturate(1.05) contrast(1.08); }
+    .hero-tag { position: absolute; z-index: 3; right: 28px; top: 25px; padding: 10px 13px; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; background: rgba(7,9,7,.5); backdrop-filter: blur(12px); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .hero-rating { position: absolute; z-index: 4; left: 0; bottom: 0; width: min(270px,70%); padding: 22px; border: 1px solid var(--line-strong); border-radius: 24px; background: rgba(15,19,15,.92); box-shadow: 0 24px 50px rgba(0,0,0,.35); backdrop-filter: blur(16px); }
+    .hero-rating-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .hero-rating strong { font-size: 46px; line-height: 1; letter-spacing: -.06em; color: var(--lime); }
+    .hero-rating span { color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+    .rating-track { height: 6px; margin-top: 16px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.09); }
+    .rating-track i { display: block; width: 88%; height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--lime),var(--cyan)); box-shadow: 0 0 16px rgba(185,255,69,.5); }
+    .crosshair { position: absolute; z-index: 4; right: -8px; top: 46%; width: 82px; height: 82px; border: 1px solid rgba(185,255,69,.38); border-radius: 50%; animation: spin 18s linear infinite; }
+    .crosshair::before, .crosshair::after { content: ""; position: absolute; background: var(--lime); box-shadow: 0 0 8px rgba(185,255,69,.6); }
+    .crosshair::before { left: 50%; top: -12px; bottom: -12px; width: 1px; }
+    .crosshair::after { top: 50%; left: -12px; right: -12px; height: 1px; }
+
+    .ticker { overflow: hidden; border-block: 1px solid var(--line); background: var(--lime); color: #0a0e08; transform: rotate(-1deg) scale(1.02); }
+    .ticker-track { width: max-content; display: flex; align-items: center; gap: 28px; padding: 13px 0; animation: marquee 28s linear infinite; font-size: 13px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; }
+    .ticker-track span::after { content: "◆"; margin-left: 28px; }
+
+    .stats-strip { display: grid; grid-template-columns: repeat(4,1fr); border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.018); }
+    .stat { min-height: 180px; padding: 28px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat span { color: var(--muted); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .stat strong { font-size: clamp(38px,4vw,58px); line-height: 1; letter-spacing: -.06em; }
+    .stat:nth-child(1) strong { color: var(--lime); }
+    .stat:nth-child(2) strong { color: var(--cyan); }
+    .stat:nth-child(3) strong { color: var(--violet); }
+    .stat:nth-child(4) strong { color: var(--orange); }
+
+    .levels { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-top: 18px; }
+    .level-card { position: relative; min-height: 330px; padding: 34px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.012)); transition: transform .35s, border-color .35s, background .35s; }
+    .level-card:hover { transform: translateY(-6px); border-color: var(--line-strong); background: linear-gradient(145deg,rgba(185,255,69,.08),rgba(255,255,255,.018)); }
+    .level-card:nth-child(2):hover { background: linear-gradient(145deg,rgba(255,77,95,.08),rgba(255,255,255,.018)); }
+    .level-index { position: absolute; right: 22px; top: 4px; color: rgba(255,255,255,.035); font-size: 190px; line-height: 1; font-weight: 1000; letter-spacing: -.1em; }
+    .level-chip { display: inline-flex; padding: 7px 11px; border: 1px solid rgba(185,255,69,.28); border-radius: 999px; color: var(--lime); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+    .level-card:nth-child(2) .level-chip { color: #ff7482; border-color: rgba(255,77,95,.32); }
+    .level-card h3 { max-width: 410px; margin-top: 80px; font-size: clamp(30px,3.4vw,48px); text-transform: uppercase; }
+    .level-card p { position: relative; z-index: 2; max-width: 500px; margin-bottom: 0; color: var(--muted); font-size: 17px; }
+
+    .proof-grid { display: grid; grid-template-columns: minmax(380px,.82fr) minmax(0,1.18fr); gap: 18px; }
+    .proof-photo { position: relative; min-height: 680px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); }
+    .proof-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+    .proof-photo:hover img { transform: scale(1.035); }
+    .proof-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg,transparent 58%,rgba(7,9,7,.8)); }
+    .fact-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+    .fact { min-height: 162px; padding: 23px; position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); transition: border-color .25s, transform .25s, background .25s; }
+    .fact:hover { transform: translateY(-3px); border-color: var(--line-strong); background: rgba(255,255,255,.035); }
+    .fact-number { display: block; margin-bottom: 24px; color: var(--lime); font-size: 11px; font-weight: 1000; letter-spacing: .1em; }
+    .fact p { max-width: 260px; margin: 0; color: #c4cac0; font-weight: 700; }
+    .proof-actions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .cases { display: grid; gap: 24px; }
+    .case-card { overflow: hidden; border: 1px solid var(--line); border-radius: 26px; background: rgba(255,255,255,.018); }
+    .case-top { display: grid; grid-template-columns: .62fr 1.38fr; gap: 0; }
+    .case-summary { padding: 34px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid var(--line); }
+    .case-person { color: var(--lime); font-size: 12px; font-weight: 1000; text-transform: uppercase; letter-spacing: .09em; }
+    .case-summary h3 { margin: 12px 0 28px; font-size: clamp(35px,4vw,58px); text-transform: uppercase; }
+    .elo-change { display: flex; align-items: center; gap: 16px; }
+    .elo-value span { display: block; color: var(--muted); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+    .elo-value strong { display: block; font-size: 36px; letter-spacing: -.055em; }
+    .elo-arrow { color: var(--lime); font-size: 28px; }
+    .case-shots { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--line); }
+    .case-shot { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #050705; }
+    .case-shot button { width: 100%; height: 100%; padding: 0; border: 0; color: var(--text); background: none; cursor: zoom-in; }
+    .case-shot img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.75) contrast(1.05); transition: transform .5s, filter .5s; }
+    .case-shot:hover img { transform: scale(1.04); filter: saturate(1) contrast(1.08); }
+    .shot-label { position: absolute; left: 14px; bottom: 14px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; background: rgba(7,9,7,.72); backdrop-filter: blur(10px); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+    .case-body { padding: 30px 34px 34px; display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; border-top: 1px solid var(--line); }
+    .case-detail span { display: block; margin-bottom: 9px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .11em; text-transform: uppercase; }
+    .case-detail p { margin: 0; color: var(--muted); }
+
+    .process { display: grid; grid-template-columns: repeat(3,1fr); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .step { position: relative; min-height: 290px; padding: 28px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.012); transition: background .3s; }
+    .step:nth-child(3n) { border-right: 0; }
+    .step:nth-last-child(-n+3) { border-bottom: 0; }
+    .step:hover { background: rgba(185,255,69,.045); }
+    .step-number { display: inline-grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--lime); font-size: 11px; font-weight: 1000; }
+    .step h3 { margin-top: 70px; font-size: 27px; text-transform: uppercase; }
+    .step p { margin-bottom: 0; color: var(--muted); }
+    .process-footer { margin-top: 18px; display: grid; grid-template-columns: 1.5fr .5fr; gap: 18px; }
+    .process-note { padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); }
+    .process-note span { display: block; margin-bottom: 8px; color: var(--lime); font-size: 10px; font-weight: 1000; text-transform: uppercase; letter-spacing: .1em; }
+    .process-note strong { font-size: 17px; }
+    .process-note p { max-width: 760px; margin: 12px 0 0; color: var(--muted); }
+
+    .learn-head { margin: 86px 0 28px; max-width: 760px; }
+    .learn-head h3 { margin-bottom: 0; font-size: clamp(34px,4.6vw,58px); text-transform: uppercase; }
+    .learn-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .learn-card { position: relative; min-height: 330px; padding: 30px; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(150deg,rgba(255,255,255,.035),rgba(255,255,255,.012)); transition: transform .3s,border-color .3s,background .3s; }
+    .learn-card:hover { transform: translateY(-5px); border-color: var(--line-strong); background: linear-gradient(150deg,rgba(185,255,69,.065),rgba(255,255,255,.015)); }
+    .learn-code { display: inline-flex; align-items: center; gap: 8px; color: var(--lime); font-size: 10px; font-weight: 1000; letter-spacing: .12em; text-transform: uppercase; }
+    .learn-code::before { content: ""; width: 8px; height: 8px; border: 1px solid currentColor; transform: rotate(45deg); }
+    .learn-card h3 { margin: 98px 0 14px; font-size: 28px; text-transform: uppercase; }
+    .learn-card p { margin: 0; color: var(--muted); }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; align-items: stretch; }
+    .price-card { position: relative; min-height: 500px; padding: 30px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: rgba(255,255,255,.018); transition: transform .35s, border-color .35s, box-shadow .35s; }
+    .price-card:hover { transform: translateY(-7px); border-color: var(--line-strong); box-shadow: 0 28px 60px rgba(0,0,0,.32); }
+    .price-card.featured { border-color: rgba(185,255,69,.5); background: linear-gradient(160deg,rgba(185,255,69,.1),rgba(255,255,255,.018) 42%); }
+    .price-card.featured::before { content: ""; position: absolute; width: 260px; height: 260px; right: -100px; top: -110px; border-radius: 50%; background: rgba(185,255,69,.12); filter: blur(20px); }
+    .price-badge { align-self: flex-start; min-height: 26px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 9px; font-weight: 1000; letter-spacing: .1em; text-transform: uppercase; }
+    .featured .price-badge { color: #0b1009; border-color: var(--lime); background: var(--lime); }
+    .price-card h3 { margin: 34px 0 4px; font-size: 29px; text-transform: uppercase; }
+    .duration { color: var(--muted); font-size: 13px; }
+    .price { margin: 28px 0; font-size: clamp(42px,4vw,58px); line-height: 1; font-weight: 1000; letter-spacing: -.06em; }
+    .price-list { margin: 0 0 28px; padding: 0; display: grid; gap: 11px; list-style: none; color: #c5cbc1; }
+    .price-list li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; }
+    .price-list li::before { content: "✓"; color: var(--lime); font-weight: 1000; }
+    .price-card .button { width: 100%; margin-top: auto; }
+    .payment { margin-top: 18px; padding: 22px 26px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px 32px; border: 1px solid var(--line); border-radius: 18px; color: var(--muted); font-size: 13px; }
+    .payment strong { color: var(--text); }
+
+    .faq { margin-top: 88px; display: grid; grid-template-columns: .7fr 1.3fr; gap: 52px; align-items: start; }
+    .faq-intro { position: sticky; top: calc(var(--header) + 28px); }
+    .faq-intro h3 { margin-bottom: 14px; font-size: clamp(38px,5vw,62px); text-transform: uppercase; }
+    .faq-intro p { max-width: 390px; color: var(--muted); }
+    .faq-list { border-top: 1px solid var(--line); }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item summary { min-height: 86px; display: grid; grid-template-columns: 1fr 34px; gap: 20px; align-items: center; cursor: pointer; list-style: none; font-size: 18px; font-weight: 850; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: "+"; width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--lime); transition: transform .25s,background .25s; }
+    .faq-item[open] summary::after { transform: rotate(45deg); background: rgba(185,255,69,.08); }
+    .faq-answer { max-width: 680px; padding: 0 54px 26px 0; color: var(--muted); }
+    .faq-answer p { margin: 0; }
+
+    .application { display: grid; grid-template-columns: .8fr 1.2fr; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; background: var(--panel); }
+    .application-copy { position: relative; padding: 46px; overflow: hidden; background: var(--lime); color: #0b1009; }
+    .application-copy::after { content: "M"; position: absolute; right: -35px; bottom: -120px; color: rgba(7,9,7,.08); font-size: 420px; line-height: 1; font-weight: 1000; }
+    .application-copy .kicker { color: #0b1009; }
+    .application-copy h2 { position: relative; z-index: 1; font-size: clamp(46px,5vw,74px); }
+    .application-copy p { position: relative; z-index: 1; max-width: 430px; font-size: 18px; font-weight: 650; }
+    .application-form { padding: 42px; }
+    .field-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+    .field { display: grid; gap: 8px; }
     .field-full { grid-column: 1 / -1; }
-    .field label { color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; }
+    .field label { color: var(--muted); font-size: 10px; font-weight: 1000; letter-spacing: .1em; text-transform: uppercase; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid var(--line); border-radius: 13px; color: var(--text); background: #0b0f0b; transition: border-color .2s, background .2s; }
+    .field input, .field select { min-height: 52px; padding: 0 14px; }
+    .field textarea { min-height: 114px; padding: 14px; resize: vertical; }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: 0; border-color: var(--lime); background: #0d120d; }
+    .field input::placeholder, .field textarea::placeholder { color: #657064; }
+    .field select:invalid { color: #657064; }
+    .form-footer { margin-top: 18px; display: flex; align-items: center; gap: 16px; }
+    .form-status { min-height: 20px; color: var(--lime); font-size: 12px; }
 
-    .field input,
-    .field textarea,
-    .field select {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      color: var(--text);
-      background: #090909;
-      outline: none;
+    .footer { padding: 32px 0; border-top: 1px solid var(--line); }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; color: var(--muted); font-size: 13px; }
+    .footer-brand { color: var(--text); font-weight: 1000; font-size: 18px; }
+    .telegram-float { position: fixed; right: 20px; bottom: 20px; z-index: 120; width: 54px; height: 54px; display: none; place-items: center; border: 1px solid #d4ff8c; border-radius: 18px; color: #0a0e08; background: var(--lime); box-shadow: 0 18px 40px rgba(0,0,0,.3),0 0 24px rgba(185,255,69,.25); font-size: 22px; font-weight: 1000; }
+
+    .lightbox { position: fixed; inset: 0; z-index: 500; padding: 26px; display: none; place-items: center; background: rgba(3,4,3,.92); backdrop-filter: blur(16px); }
+    .lightbox.open { display: grid; }
+    .lightbox-dialog { width: min(1100px,100%); max-height: calc(100vh - 52px); display: grid; grid-template-rows: minmax(0,1fr) auto; overflow: hidden; border: 1px solid var(--line-strong); border-radius: 20px; background: var(--panel); }
+    .lightbox-image-wrap { min-height: 0; display: grid; place-items: center; overflow: auto; background: #050705; }
+    .lightbox-image { max-width: 100%; max-height: calc(100vh - 130px); object-fit: contain; }
+    .lightbox-bar { min-height: 58px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 20px; color: var(--muted); font-size: 13px; }
+    .lightbox-original { color: var(--lime); font-weight: 850; }
+    .lightbox-close { position: fixed; right: 20px; top: 18px; z-index: 2; width: 44px; height: 44px; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--text); background: var(--panel); font-size: 23px; cursor: pointer; }
+    .lightbox-lock { overflow: hidden; }
+
+    .reveal { opacity: 1; transform: none; }
+    .reveal.pending { opacity: 0; transform: translateY(30px); transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1); }
+    .reveal.pending.visible { opacity: 1; transform: none; }
+
+    @keyframes pulse { 50% { opacity: .55; box-shadow: 0 0 0 9px rgba(185,255,69,0),0 0 12px var(--lime); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    @media (max-width: 1060px) {
+      .nav-links { display: none; }
+      .hero-grid { grid-template-columns: 1fr .82fr; gap: 28px; }
+      .hero-visual { min-height: 540px; }
+      .proof-grid { grid-template-columns: 1fr; }
+      .proof-photo { min-height: 580px; }
+      .application { grid-template-columns: 1fr; }
+      .application-copy { min-height: 380px; }
     }
 
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus { border-color: var(--line-strong); }
-    .field textarea { min-height: 108px; resize: vertical; }
-
-    .form-status {
-      min-height: 22px;
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-
-    .learning-layout {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 36px;
-      align-items: start;
-      margin-top: 26px;
-    }
-
-    .learning-column {
-      position: relative;
-      padding: 0;
-    }
-
-    .learning-column-title {
-      margin: 0 0 22px;
-      color: var(--accent-lime);
-      font-size: clamp(22px, 2vw, 34px);
-      line-height: 1;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing: -.03em;
-    }
-
-    .learning-bullets {
-      display: grid;
-      gap: 18px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .learning-bullets li {
-      position: relative;
-      padding-left: 26px;
-      color: var(--text);
-      font-size: clamp(16px, 1.45vw, 18px);
-      line-height: 1.55;
-    }
-
-    .learning-bullets li::before {
-      content: "▲";
-      position: absolute;
-      left: 0;
-      top: .18em;
-      color: var(--accent-lime);
-      font-size: 12px;
-      line-height: 1;
-    }
-
-    .learning-bullets strong {
-      color: #fff;
-      font-weight: 950;
-    }
-
-    .learning-bottom {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 34px;
-    }
-
-    .learning-mini {
-      padding: 22px 22px 20px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(145deg, rgba(255,255,255,.02), rgba(255,255,255,.008));
-      transition: transform .28s ease, border-color .28s ease, background-color .28s ease;
-    }
-
-    .learning-mini:nth-child(1) { border-top: 2px solid var(--accent-cyan); }
-    .learning-mini:nth-child(2) { border-top: 2px solid var(--accent-orange); }
-    .learning-mini:nth-child(3) { border-top: 2px solid var(--accent-lime); }
-
-    .learning-mini-title {
-      display: block;
-      margin-bottom: 10px;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 950;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-
-    .learning-mini p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.55;
-    }
-
-
-    .creator-note {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .creator-note .container {
-      display: flex;
-      justify-content: flex-start;
-    }
-
-    .creator-note span {
-      color: #777;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .16em;
-      text-transform: lowercase;
-    }
-
-    footer {
-      padding: 22px 0 34px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .footer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .footer-creator {
-      color: #777;
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: lowercase;
-    }
-
-    .reveal {
-      opacity: 1;
-      transform: none;
-    }
-
-    .reveal.reveal-pending {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity .62s ease, transform .62s ease;
-    }
-
-    .reveal.reveal-pending.visible {
-      opacity: 1;
-      transform: none;
-    }
-
-    img.image-load-error {
-      min-height: 180px;
-      object-fit: contain !important;
-      background: #0b0b0b;
-      color: #c8ff5a;
-    }
-
-    @media (max-width: 1120px) {
-      .hero-grid { grid-template-columns: 1fr; }
-      .hero-media { min-height: 540px; }
-      .trust-grid { grid-template-columns: 1fr 1fr; }
-      .pricing-layout { grid-template-columns: 1fr; }
-      .learning-layout { grid-template-columns: 1fr; }
-      .learning-bottom { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 900px) {
-      .nav-links {
-        position: absolute;
-        top: 70px;
-        left: 18px;
-        right: 18px;
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        padding: 18px;
-        border: 1px solid var(--line);
-        background: rgba(6,6,6,.98);
-      }
-      .nav-links.open { display: flex; }
+    @media (max-width: 820px) {
+      :root { --header: 66px; }
+      .container { width: min(calc(100% - 28px),var(--container)); }
+      .section { padding: 82px 0; }
+      .header .button-small { display: none; }
       .menu-button { display: grid; place-items: center; }
-      .nav > .button-primary { display: none; }
-      .case-grid { grid-template-columns: 1fr; }
-      .price-grid { grid-template-columns: 1fr; }
-      .learning-layout { gap: 26px; }
-      .learning-bottom { grid-template-columns: 1fr; }
+      .nav-links { position: absolute; top: calc(100% + 8px); left: 14px; right: 14px; padding: 12px; display: none; align-items: stretch; flex-direction: column; border-radius: 18px; background: rgba(11,14,11,.96); backdrop-filter: blur(18px); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 14px; font-size: 13px; }
+      .hero { min-height: auto; padding-top: calc(var(--header) + 46px); }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 560px; }
+      .hero-frame { left: 22px; }
+      .section-head { grid-template-columns: 1fr; gap: 12px; }
+      .section-head p { margin-left: 0; }
+      .stats-strip { grid-template-columns: repeat(2,1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .levels { grid-template-columns: 1fr; }
+      .level-card { min-height: 300px; }
+      .case-top { grid-template-columns: 1fr; }
+      .case-summary { min-height: 300px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .case-body { grid-template-columns: 1fr; gap: 22px; }
+      .process { grid-template-columns: repeat(2,1fr); }
+      .step:nth-child(3n) { border-right: 1px solid var(--line); }
+      .step:nth-child(2n) { border-right: 0; }
+      .step:nth-last-child(-n+3) { border-bottom: 1px solid var(--line); }
+      .step:nth-last-child(-n+2) { border-bottom: 0; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .price-card { min-height: auto; }
+      .price-card .button { margin-top: 20px; }
+      .learn-grid { grid-template-columns: 1fr; }
+      .learn-card { min-height: 260px; }
+      .learn-card h3 { margin-top: 62px; }
+      .faq { grid-template-columns: 1fr; gap: 24px; }
+      .faq-intro { position: static; }
+      .telegram-float { display: grid; }
     }
 
-    @media (max-width: 680px) {
-      .hero { padding-top: 94px; }
-      .hero-media { grid-template-columns: 1fr; }
-      .hero-photo { min-height: 430px; }
-      .hero-stats { grid-template-columns: repeat(3, 1fr); padding: 0; }
-      .hero-stat { padding: 18px 8px; border-right: 1px solid var(--line); border-bottom: 0; }
-      .hero-stat:last-child { border-right: 0; }
-      .hero-stat strong { font-size: 23px; }
-      .trust-grid { grid-template-columns: 1fr; }
-      .case-media { grid-template-columns: 1fr; }
-      .case-body { grid-template-columns: 1fr; }
-      .case-result { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    @media (max-width: 560px) {
+      h1 { font-size: clamp(58px,21vw,94px); }
+      h2 { font-size: clamp(38px,13vw,60px); }
+      .hero-visual { min-height: 480px; }
+      .hero-frame { inset: 0 0 36px 12px; border-radius: 24px; }
+      .hero-rating { width: 220px; padding: 18px; }
+      .hero-rating strong { font-size: 38px; }
+      .crosshair { right: -18px; width: 64px; height: 64px; }
+      .stats-strip { grid-template-columns: 1fr; }
+      .stat { min-height: 135px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .stat:last-child { border-bottom: 0; }
+      .fact-grid { grid-template-columns: 1fr; }
+      .proof-photo { min-height: 470px; }
+      .case-shots { grid-template-columns: 1fr; }
+      .case-body, .case-summary { padding: 24px; }
+      .process { grid-template-columns: 1fr; }
+      .step, .step:nth-child(2n), .step:nth-child(3n), .step:nth-last-child(-n+3) { min-height: 250px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .step:last-child { border-bottom: 0; }
+      .process-footer { grid-template-columns: 1fr; }
+      .application-copy, .application-form { padding: 30px 22px; }
+      .application-copy { min-height: 340px; }
       .field-grid { grid-template-columns: 1fr; }
       .field-full { grid-column: auto; }
-      .learning-column-title { font-size: 26px; }
-      .learning-bullets { gap: 15px; }
-      .learning-bullets li { font-size: 15px; }
-      .learning-mini { padding: 20px; }
-      .section { padding: 74px 0; }
-      .elo-overview { grid-template-columns: 1fr; }
-      .elo-overview-item {
-        min-height: 180px;
-        padding: 28px;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }
-      .elo-overview-item:last-child { border-bottom: 0; }
-    }
-
-    /* Компактный белый прицел вместо стандартного курсора. */
-    @media (hover: hover) and (pointer: fine) {
-      html,
-      body,
-      body * {
-        cursor: url("./crosshair-cursor.png") 8 8, crosshair !important;
-      }
-    }
-
-/* COLOR ACCENTS V3 — тёмная база с яркими, но контролируемыми акцентами */
-    :root {
-      --accent-lime: #c8ff5a;
-      --accent-cyan: #58d7ff;
-      --accent-violet: #a970ff;
-      --accent-orange: #ff8a4c;
-      --accent-pink: #ff5e8a;
-    }
-
-    ::selection {
-      color: #050505;
-      background: var(--accent-lime);
-    }
-
-    body {
-      background:
-        radial-gradient(circle at 8% 10%, rgba(200,255,90,.055), transparent 26%),
-        radial-gradient(circle at 92% 28%, rgba(88,215,255,.06), transparent 30%),
-        radial-gradient(circle at 46% 78%, rgba(169,112,255,.045), transparent 34%),
-        linear-gradient(180deg, #050505 0%, #080808 55%, #050505 100%);
-    }
-
-    .brand {
-      color: var(--accent-lime);
-      text-shadow: 0 0 24px rgba(200,255,90,.12);
-    }
-
-    .eyebrow { color: var(--accent-lime); }
-
-    h1 {
-      color: #fff;
-      background: none;
-      -webkit-background-clip: border-box;
-      background-clip: border-box;
-      -webkit-text-fill-color: currentColor;
-    }
-
-    .nav-links a.active,
-    .nav-links a:hover { color: var(--accent-cyan); }
-
-    .button-primary {
-      color: #050505;
-      background: linear-gradient(100deg, var(--accent-lime), var(--accent-cyan));
-      border-color: rgba(255,255,255,.2);
-    }
-
-    .button-primary:hover,
-    .button-primary:focus-visible {
-      background: linear-gradient(100deg, #dcff8a, #8fe6ff);
-      box-shadow: 0 0 28px rgba(88,215,255,.24), 0 14px 34px rgba(0,0,0,.35);
-    }
-
-    .button-secondary:hover,
-    .button-secondary:focus-visible {
-      color: #fff;
-      border-color: var(--accent-cyan);
-      background: rgba(88,215,255,.075);
-      box-shadow: 0 0 24px rgba(88,215,255,.16), 0 12px 30px rgba(0,0,0,.34);
-    }
-
-    .hero-media {
-      border-top: 2px solid var(--accent-cyan);
-      border-bottom: 2px solid var(--accent-violet);
-    }
-
-    .hero-stat:nth-child(1) strong { color: var(--accent-lime); }
-    .hero-stat:nth-child(2) strong { color: var(--accent-cyan); }
-    .hero-stat:nth-child(3) strong { color: var(--accent-violet); }
-    .hero-stat:nth-child(4) strong { color: var(--accent-orange); }
-
-    .section-title::after {
-      height: 2px;
-      opacity: .72;
-    }
-
-    #chapter-2 .section-title::after { background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink), transparent); }
-    #chapter-3 .section-title::after { background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan), transparent); }
-    #chapter-4 .section-title::after { background: linear-gradient(90deg, var(--accent-lime), var(--accent-orange), transparent); }
-    #chapter-5 .section-title::after { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet), transparent); }
-
-    .fact:nth-child(4n + 1) .fact-icon { color: var(--accent-lime); border-color: rgba(200,255,90,.65); background: rgba(200,255,90,.055); }
-    .fact:nth-child(4n + 2) .fact-icon { color: var(--accent-cyan); border-color: rgba(88,215,255,.65); background: rgba(88,215,255,.055); }
-    .fact:nth-child(4n + 3) .fact-icon { color: var(--accent-violet); border-color: rgba(169,112,255,.65); background: rgba(169,112,255,.055); }
-    .fact:nth-child(4n) .fact-icon { color: var(--accent-orange); border-color: rgba(255,138,76,.65); background: rgba(255,138,76,.055); }
-
-    .elo-overview-item:first-child { border-top: 2px solid var(--accent-orange); }
-    .elo-overview-item:last-child { border-top: 2px solid var(--accent-cyan); }
-    .elo-overview-item:first-child strong { color: var(--accent-orange); }
-    .elo-overview-item:last-child strong { color: var(--accent-cyan); }
-
-    .case-card:nth-child(1) { border-top: 2px solid var(--accent-violet); }
-    .case-card:nth-child(2) { border-top: 2px solid var(--accent-cyan); }
-    .case-card:nth-child(1) h3 { color: var(--accent-violet); }
-    .case-card:nth-child(2) h3 { color: var(--accent-cyan); }
-
-    .price-card:nth-child(1) { border-top: 2px solid var(--accent-cyan); }
-    .price-card:nth-child(2) { border-top: 2px solid var(--accent-lime); }
-    .price-card:nth-child(3) { border-top: 2px solid var(--accent-orange); }
-    .price-card:nth-child(1) .price { color: var(--accent-cyan); }
-    .price-card:nth-child(2) .price { color: var(--accent-lime); }
-    .price-card:nth-child(3) .price { color: var(--accent-orange); }
-    .discount { background: var(--accent-lime); }
-    .list li::before { color: var(--accent-lime); }
-
-    .learning-mini,
-    .case-card,
-    .price-card,
-    .panel {
-      transition: transform .28s ease, border-color .28s ease, background-color .28s ease;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .learning-mini:hover,
-      .case-card:hover,
-      .price-card:hover {
-        transform: translateY(-3px);
-        background: rgba(255,255,255,.026);
-        border-color: rgba(88,215,255,.32);
-      }
-    }
-
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 0 3px rgba(88,215,255,.08);
-      outline: none;
-    }
-
-    .creator-note span,
-    .footer-creator { color: rgba(88,215,255,.62); }
-
-  
-
-    /* Надёжное отображение изображений на любых экранах */
-    .case-image-button { aspect-ratio: auto; min-height: 0; }
-    .case-shot img { width: 100%; height: auto; aspect-ratio: auto; object-fit: contain; display: block; }
-    .hero-photo, .achievement-photo { display: block; }
-
-    @media (max-width: 1180px) {
-      .case-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Обновление блока кейсов: стабильная сетка без растягивания */
-    #chapter-3 .case-grid {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-
-    #chapter-3 .case-card {
-      width: 100%;
-      min-width: 0;
-    }
-
-    #chapter-3 .case-media {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-items: start;
-      gap: 12px;
-    }
-
-    #chapter-3 .case-shot {
-      min-width: 0;
-      align-self: start;
-    }
-
-    #chapter-3 .case-image-button {
-      aspect-ratio: 16 / 9;
-      min-height: 0;
-    }
-
-    #chapter-3 .case-shot img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-
-    #chapter-3 .case-body {
-      grid-template-columns: minmax(0, 1fr) 170px;
-      align-items: start;
-    }
-
-    #chapter-3 .case-result {
-      grid-template-rows: none;
-      grid-auto-rows: 132px;
-      align-content: start;
-    }
-
-    #chapter-3 .elo-box {
-      min-height: 132px;
-    }
-
-    @media (max-width: 760px) {
-      #chapter-3 .case-media { grid-template-columns: 1fr; }
-      #chapter-3 .case-body { grid-template-columns: 1fr; }
-      #chapter-3 .case-result {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: none;
-        grid-auto-rows: 118px;
-      }
-      #chapter-3 .elo-box { min-height: 118px; }
-    }
-
-
-    /* Блок уровней: прозрачный фон, совпадающий с основным фоном сайта */
-    .level-path {
-      position: relative;
-      overflow: visible;
-      padding-top: 0;
-      padding-bottom: clamp(62px, 7vw, 90px);
-      background: transparent;
-      border: 0;
-    }
-
-    .level-path::before {
-      content: none;
-    }
-
-    .level-path .container {
-      position: relative;
-      z-index: 1;
-      padding-top: 0;
-      padding-bottom: 0;
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      box-shadow: none;
-    }
-
-    .level-path-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
-      gap: 32px;
-      align-items: end;
-      margin-bottom: 32px;
-    }
-
-    .level-path-head .eyebrow {
-      margin-bottom: 14px;
-      color: #c7ff33;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: .09em;
-      text-transform: uppercase;
-    }
-
-    .level-path-head .eyebrow::before {
-      content: "≫";
-      margin-right: 12px;
-      font-size: 1.1em;
-      vertical-align: baseline;
-    }
-
-    .level-path-head h2 {
-      margin: 0;
-      font-size: clamp(40px, 4.2vw, 58px);
-      line-height: .96;
-      letter-spacing: -.04em;
-      text-transform: none;
-    }
-
-    .level-path-intro-wrap {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      gap: 18px;
-      min-height: 100%;
-    }
-
-    .level-path-intro {
-      margin: 0;
-      text-align: left;
-      color: rgba(235,240,248,.88);
-      font-size: clamp(19px, 1.5vw, 22px);
-      line-height: 1.45;
-      text-wrap: pretty;
-    }
-
-    .level-path-intro-line {
-      position: relative;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.08) 76%, rgba(199,255,51,.85) 100%);
-      overflow: visible;
-    }
-
-    .level-path-intro-line::after {
-      content: "";
-      position: absolute;
-      right: -1px;
-      top: 50%;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: #d6ff47;
-      transform: translateY(-50%);
-      box-shadow: 0 0 20px rgba(214,255,71,.95), 0 0 34px rgba(214,255,71,.5);
-    }
-
-    .level-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .level-card {
-      --level-color: #43ff2b;
-      --level-rgb: 67, 255, 43;
-      position: relative;
-      min-height: 242px;
-      padding: 30px 32px;
-      display: grid;
-      grid-template-columns: 160px minmax(0, 1fr);
-      gap: 26px;
-      align-items: center;
-      overflow: hidden;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.12);
-      background:
-        radial-gradient(circle at 0% 100%, rgba(var(--level-rgb), .06), transparent 32%),
-        linear-gradient(180deg, rgba(13,19,29,.74), rgba(8,12,19,.72));
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.03), 0 18px 34px rgba(0,0,0,.28);
-      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
-      isolation: isolate;
-    }
-
-    .level-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(180deg, rgba(var(--level-rgb), .95), rgba(var(--level-rgb), .18) 12%, rgba(255,255,255,.08) 22%, rgba(255,255,255,.02) 100%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: .95;
-    }
-
-    .level-card::after {
-      content: "";
-      position: absolute;
-      inset: auto -15% -58% auto;
-      width: 52%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(var(--level-rgb), .12), transparent 63%);
-      filter: blur(12px);
-      pointer-events: none;
-      opacity: .75;
-      transition: opacity .35s ease, transform .35s ease;
-    }
-
-    .level-card-red {
-      --level-color: #ff2e2e;
-      --level-rgb: 255, 46, 46;
-    }
-
-    .level-gauge {
-      width: 140px;
-      aspect-ratio: 1;
-      position: relative;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: radial-gradient(circle at 50% 48%, rgba(40,45,56,.95) 0 43%, rgba(18,22,31,.98) 44% 100%);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 14px 24px rgba(0,0,0,.32);
-      transition: transform .35s ease, box-shadow .35s ease;
-    }
-
-    .level-gauge::before {
-      content: "";
-      position: absolute;
-      inset: 9px;
-      border-radius: 50%;
-      background: conic-gradient(from 225deg, var(--level-color) 0deg var(--level-progress), #2d3038 var(--level-progress) 306deg, transparent 306deg 360deg);
-      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 17px));
-      mask: radial-gradient(farthest-side, transparent calc(100% - 18px), #000 calc(100% - 17px));
-      filter: drop-shadow(0 0 10px rgba(var(--level-rgb), .18));
-      transition: transform .35s ease, filter .35s ease;
-    }
-
-    .level-gauge strong {
-      position: relative;
-      z-index: 1;
-      color: var(--level-color);
-      font-size: 66px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -.055em;
-      text-shadow: 0 0 18px rgba(var(--level-rgb), .12);
-      transition: transform .35s ease, text-shadow .35s ease;
-    }
-
-    .level-copy h3 {
-      margin: 0 0 12px;
-      color: #b3ff2b;
-      font-size: clamp(28px, 2.1vw, 44px);
-      line-height: 1.02;
-      letter-spacing: -.04em;
-      text-transform: none;
-      transition: transform .35s ease, color .35s ease;
-    }
-
-    .level-card-red .level-copy h3 {
-      color: #bdf42d;
-    }
-
-    .level-copy p {
-      margin: 0;
-      max-width: 460px;
-      color: rgba(243,246,251,.96);
-      font-size: clamp(16px, 1.3vw, 18px);
-      line-height: 1.58;
-      text-wrap: pretty;
-    }
-
-    .level-card:hover,
-    .level-card:focus-visible {
-      transform: translateY(-6px);
-      border-color: rgba(var(--level-rgb), .25);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 24px 44px rgba(0,0,0,.34);
-    }
-
-    .level-card:hover::after,
-    .level-card:focus-visible::after {
-      opacity: 1;
-      transform: scale(1.06);
-    }
-
-    .level-card:hover .level-gauge,
-    .level-card:focus-visible .level-gauge {
-      transform: scale(1.035);
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 16px 28px rgba(0,0,0,.34);
-    }
-
-    .level-card:hover .level-gauge::before,
-    .level-card:focus-visible .level-gauge::before {
-      transform: rotate(6deg);
-      filter: drop-shadow(0 0 15px rgba(var(--level-rgb), .26));
-    }
-
-    .level-card:hover .level-gauge strong,
-    .level-card:focus-visible .level-gauge strong {
-      transform: scale(1.03);
-      text-shadow: 0 0 26px rgba(var(--level-rgb), .22);
-    }
-
-    .level-card:hover .level-copy h3,
-    .level-card:focus-visible .level-copy h3 {
-      transform: translateX(3px);
-    }
-
-    @media (max-width: 1080px) {
-      .level-path-head {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-
-      .level-path-intro-wrap {
-        max-width: 760px;
-      }
-    }
-
-    @media (max-width: 860px) {
-      .level-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 680px) {
-      .level-path .container { padding: 28px 18px; }
-      .level-card {
-        min-height: 0;
-        padding: 26px 20px;
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .level-gauge {
-        width: 132px;
-        margin-inline: auto;
-      }
-      .level-gauge strong { font-size: 60px; }
-      .level-copy,
-      .level-copy p {
-        text-align: center;
-        margin-inline: auto;
-      }
+      .form-footer { align-items: stretch; flex-direction: column; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+      .lightbox { padding: 12px; }
+      .lightbox-close { right: 12px; top: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .level-card,
-      .level-card::after,
-      .level-gauge,
-      .level-gauge::before,
-      .level-gauge strong,
-      .level-copy h3 {
-        transition-duration: .01ms !important;
-      }
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal.pending { opacity: 1; transform: none; }
     }
-
-    @media (min-width: 981px) {
-    }
-
-
-
-    /* REVIEW FIXES — логика секций, карточки процесса и стабильная типографика */
-    .hero-stat strong {
-      white-space: nowrap;
-      font-size: clamp(22px, 2.4vw, 31px);
-      letter-spacing: -.035em;
-    }
-
-    #chapter-4 .section-title::after {
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet), transparent);
-    }
-
-    #chapter-5 .section-title::after {
-      background: linear-gradient(90deg, var(--accent-lime), var(--accent-orange), transparent);
-    }
-
-    .training-heading {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, .72fr);
-      gap: 34px;
-      align-items: end;
-      margin-bottom: 28px;
-    }
-
-    .training-heading .section-title { margin-bottom: 0; }
-
-    .training-heading > p {
-      margin: 0 0 4px;
-      color: var(--muted);
-      font-size: clamp(15px, 1.35vw, 18px);
-      line-height: 1.6;
-      text-wrap: pretty;
-    }
-
-    .training-kicker {
-      display: block;
-      margin-bottom: 12px;
-      color: var(--accent-cyan);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-
-    .training-flow {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .training-step {
-      min-height: 230px;
-      padding: 24px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: linear-gradient(145deg, rgba(255,255,255,.024), rgba(255,255,255,.008));
-      transition: transform .3s ease, border-color .3s ease, background-color .3s ease, box-shadow .3s ease;
-    }
-
-    .training-step::after {
-      content: "";
-      position: absolute;
-      right: -35px;
-      bottom: -55px;
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(88,215,255,.1), transparent 68%);
-      pointer-events: none;
-    }
-
-    .training-step:nth-child(2n)::after {
-      background: radial-gradient(circle, rgba(169,112,255,.11), transparent 68%);
-    }
-
-    .training-number {
-      display: inline-flex;
-      margin-bottom: 32px;
-      color: var(--accent-cyan);
-      font-size: 12px;
-      font-weight: 1000;
-      letter-spacing: .14em;
-    }
-
-    .training-step:nth-child(2n) .training-number { color: var(--accent-violet); }
-
-    .training-step h3 {
-      margin-bottom: 12px;
-      color: #fff;
-      font-size: clamp(20px, 1.8vw, 27px);
-      letter-spacing: -.025em;
-    }
-
-    .training-step p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.62;
-      text-wrap: pretty;
-    }
-
-    .training-meta {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 14px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.012);
-    }
-
-    .training-meta article {
-      min-height: 116px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border-right: 1px solid var(--line);
-    }
-
-    .training-meta article:last-child { border-right: 0; }
-
-    .training-meta span {
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 950;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .training-meta strong {
-      color: #fff;
-      font-size: 15px;
-      line-height: 1.45;
-      text-wrap: pretty;
-    }
-
-    .training-meta .training-audience {
-      min-height: 138px;
-    }
-
-    .training-meta .training-audience strong {
-      max-width: 590px;
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .training-step:hover {
-        transform: translateY(-4px);
-        border-color: rgba(88,215,255,.42);
-        background: rgba(88,215,255,.035);
-        box-shadow: 0 18px 40px rgba(0,0,0,.3);
-      }
-      .training-step:nth-child(2n):hover {
-        border-color: rgba(169,112,255,.42);
-        background: rgba(169,112,255,.035);
-      }
-    }
-
-    .custom-select { position: relative; }
-
-    .custom-select-trigger {
-      width: 100%;
-      min-height: 48px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      border: 1px solid var(--line);
-      color: var(--text);
-      background: #090909;
-      text-align: left;
-      cursor: inherit;
-      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
-    }
-
-    .custom-select.open .custom-select-trigger,
-    .custom-select-trigger:focus-visible {
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 0 3px rgba(88,215,255,.08);
-      outline: none;
-    }
-
-    .custom-select-arrow { color: var(--accent-cyan); transition: transform .2s ease; }
-    .custom-select.open .custom-select-arrow { transform: rotate(180deg); }
-
-    .custom-select-menu {
-      position: absolute;
-      z-index: 40;
-      top: calc(100% + 6px);
-      left: 0;
-      right: 0;
-      padding: 6px;
-      border: 1px solid var(--line-strong);
-      background: #090909;
-      box-shadow: 0 18px 40px rgba(0,0,0,.55);
-    }
-
-    .custom-select-menu button {
-      width: 100%;
-      padding: 11px 12px;
-      border: 0;
-      color: var(--text);
-      background: transparent;
-      text-align: left;
-      cursor: inherit;
-    }
-
-    .custom-select-menu button:hover,
-    .custom-select-menu button:focus-visible {
-      color: #050505;
-      background: linear-gradient(100deg, var(--accent-lime), var(--accent-cyan));
-      outline: none;
-    }
-
-    @media (max-width: 980px) {
-      .training-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 720px) {
-      .training-heading { grid-template-columns: 1fr; gap: 14px; }
-      .training-flow { grid-template-columns: 1fr; }
-      .training-step { min-height: 0; }
-      .training-meta { grid-template-columns: 1fr; }
-      .training-meta article { border-right: 0; border-bottom: 1px solid var(--line); }
-      .training-meta article:last-child { border-bottom: 0; }
-    }
-
-</style>
+  </style>
 </head>
 <body>
-<header class="header" id="header">
-<div class="container nav">
-<a class="brand" href="#chapter-1">MIX3R</a>
-<nav aria-label="Главная навигация" class="nav-links" id="navLinks">
-<a href="#chapter-1">Кто я такой</a>
-<a href="#chapter-2">Почему мне стоит верить</a>
-<a href="#chapter-3">Успехи учеников</a>
+  <a class="skip-link" href="#content">Перейти к содержанию</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
 
+  <header class="header" id="header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="mix3r — наверх"><span class="brand-mark" aria-hidden="true"></span>MIX3R</a>
+      <nav class="nav-links" id="navLinks" aria-label="Главная навигация">
+        <a href="#about">Обо мне</a>
+        <a href="#results">Результаты</a>
+        <a href="#process">Обучение</a>
+        <a href="#pricing">Цены</a>
+      </nav>
+      <a class="button button-primary button-small" href="#application">Записаться <span class="arrow">↗</span></a>
+      <button class="menu-button" id="menuButton" type="button" aria-label="Открыть меню" aria-expanded="false">☰</button>
+    </div>
+  </header>
 
-<a href="#chapter-4">Как проходит обучение</a><a href="#chapter-5">Формат и цены</a></nav>
-<a class="button button-primary" href="#application">Написать мне ↗</a>
-<button aria-expanded="false" aria-label="Открыть меню" class="menu-button" id="menuButton">☰</button>
-</div>
-</header>
-<main>
-<section class="hero" id="chapter-1">
-<div class="container hero-grid">
-<div class="hero-copy reveal">
-<div class="eyebrow">Кто я такой</div>
-<h1>MIX3R</h1>
-<p class="lead">Привет, меня зовут Максим, мне 22 года. Мой ник — mix3r.</p>
-<p class="lead">В Counter-Strike больше 10 лет, из них 5 — на полупрофессиональном уровне. Последние 2 года занимаюсь индивидуальным обучением и работаю с игроками из Faceit, Premier, MM и других форматов.</p>
-<p class="lead">На тренировках передаю опыт, который помогает стабильнее побеждать, лучше понимать игру и расти в рейтинге.</p>
-<div class="hero-actions">
-<a class="button button-primary" href="https://t.me/mixertren" rel="noopener" target="_blank">Написать мне в Telegram ↗</a>
-</div>
-</div>
-<div class="hero-media reveal">
-<div class="hero-photo-frame photo-hover">
-<img alt="Я, mix3r, за игровым компьютером" class="hero-photo" decoding="async" fetchpriority="high" height="653" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./hero.jpg" width="986"/>
-</div>
-<div class="hero-stats">
-<div class="hero-stat"><strong>4400</strong><span>пиковое ELO в CS:GO</span></div>
-<div class="hero-stat"><strong>3500</strong><span>пиковое ELO в CS2</span></div>
-<div class="hero-stat"><strong>12&nbsp;000+</strong><span>часов в CS</span></div>
-<div class="hero-stat"><strong>4&nbsp;000$+</strong><span>призовых за год</span></div>
-</div>
-</div>
-</div>
-</section>
-<section class="section level-path" id="level-path">
-<div class="container">
-<div class="level-path-head reveal">
-<div>
-<h2>Ответы на вопросы</h2>
-</div>
-<div class="level-path-intro-wrap">
-<p class="level-path-intro">Выбери свой уровень и получи максимум пользы от обучения</p>
-<div aria-hidden="true" class="level-path-intro-line"></div>
-</div>
-</div>
-<div class="level-grid">
-<article class="level-card reveal" tabindex="0">
-<div aria-hidden="true" class="level-gauge" style="--level-progress: 108deg">
-<strong>3</strong>
-</div>
-<div class="level-copy">
-<h3>У тебя 3 ЛВЛ?</h3>
-<p>Поймёшь почему у тебя постоянно красный рейтинг и ты проигрываешь игры. Научишься находить киллы и делать разницу в играх</p>
-</div>
-</article>
-<article class="level-card level-card-red reveal" tabindex="0">
-<div aria-hidden="true" class="level-gauge" style="--level-progress: 257deg">
-<strong>10</strong>
-</div>
-<div class="level-copy">
-<h3>Застрял на 2000 эло?</h3>
-<p>Узнаешь про правильный подход к игре, как поднимать цифры на большом эло. Начнёшь понимать свои действия и их результат</p>
-</div>
-</article>
-</div>
-</div>
-</section>
-<section class="section" id="chapter-2">
-<div class="container">
-<h2 class="section-title reveal">Почему мне стоит верить</h2>
-<div class="trust-grid">
-<div class="fact-list panel reveal">
-<div class="fact"><span class="fact-icon">1</span><span>Пиковое ELO в CS:GO — 4400.</span></div>
-<div class="fact"><span class="fact-icon">2</span><span>Пиковое ELO в CS2 — 3500.</span></div>
-<div class="fact"><span class="fact-icon">3</span><span>Более 12&nbsp;000 часов в CS:GO и CS2.</span></div>
-<div class="fact"><span class="fact-icon">4</span><span>Матч против команды из топ-40 мира на LAN-ивенте.</span></div>
-<div class="fact"><span class="fact-icon">5</span><span>Победа в главном полупрофессиональном турнире России в 2021 году.</span></div>
-<div class="fact"><span class="fact-icon">6</span><span>Участие в Red Bull Flick LAN 2x2.</span></div>
-<div class="fact"><span class="fact-icon">7</span><span>Четыре сезона в ESEA Main и два выхода в плей-офф.</span></div>
-<div class="fact"><span class="fact-icon">8</span><span>4&nbsp;000$+ призовых за один год.</span></div>
-</div>
-<div class="panel photo-hover reveal">
-<img alt="Я с призовым чеком на турнире" class="achievement-photo" decoding="async" fetchpriority="low" height="960" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./achievement.jpg" width="1280"/>
-</div>
-</div>
+  <main id="content">
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="availability"><span class="availability-dot" aria-hidden="true"></span>Идёт набор на персональные тренировки</div>
+          <span class="kicker">CS2 coaching / by mix3r</span>
+          <h1>Играй<br><span class="outline-word">умнее.</span></h1>
+          <p class="hero-lead">Персональное обучение Counter-Strike 2 без воды: находим ошибки, перестраиваем решения и превращаем нестабильную игру в понятную систему.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://t.me/mixertren" target="_blank" rel="noopener">Написать в Telegram <span class="arrow">↗</span></a>
+            <a class="button" href="#results">Смотреть результаты <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-note">
+            <span class="hero-note-avatar"><img src="./hero.jpg" alt="" width="72" height="72"></span>
+            <span>Максим, 10+ лет в Counter-Strike<br><strong class="accent">2 года обучаю игроков</strong></span>
+          </div>
+        </div>
+        <div class="hero-visual reveal" aria-label="mix3r за игровым компьютером">
+          <div class="hero-frame">
+            <img src="./hero.jpg" alt="Я, mix3r, за игровым компьютером" width="986" height="653" fetchpriority="high">
+            <span class="hero-tag">Player → Coach</span>
+          </div>
+          <div class="hero-rating">
+            <div class="hero-rating-top"><strong>4400</strong><span>peak ELO<br>CS:GO</span></div>
+            <div class="rating-track" aria-hidden="true"><i></i></div>
+          </div>
+          <span class="crosshair" aria-hidden="true"></span>
+        </div>
+      </div>
+    </section>
 
-<div class="inline-actions reveal">
-<a class="button button-secondary" href="https://www.youtube.com/watch?v=A06Lpoe9f9A" rel="noopener" target="_blank">Матч против топ-40 команды мира на LAN</a>
-<a class="button button-secondary" href="https://vkvideo.ru/video-174875268_456239466?pl=-174875268_1" rel="noopener" target="_blank">Red Bull Flick LAN с моим участием</a>
-</div>
-</div>
-</section>
-<section class="section" id="chapter-3">
-<div class="container">
-<h2 class="section-title reveal">Успехи моих учеников</h2>
-<div class="case-grid">
-<article class="case-card reveal">
-<div class="case-media">
-<figure class="case-shot">
-<button aria-label="Открыть изображение «Downlowd — до обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="Downlowd — до обучения" data-lightbox-src="./downlowd-before.jpg" type="button">
-<img alt="Статистика Downlowd до обучения" decoding="async" fetchpriority="low" height="602" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./downlowd-before.jpg" width="1150"/>
-<span class="case-zoom">Открыть</span>
-</button>
-<figcaption>До обучения</figcaption>
-</figure>
-<figure class="case-shot">
-<button aria-label="Открыть изображение «Downlowd — после обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="Downlowd — после обучения" data-lightbox-src="./downlowd-after.jpg" type="button">
-<img alt="Статистика Downlowd после обучения" decoding="async" fetchpriority="low" height="752" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./downlowd-after.jpg" width="1137"/>
-<span class="case-zoom">Открыть</span>
-</button>
-<figcaption>После обучения</figcaption>
-</figure>
-</div>
-<div class="case-body">
-<div class="case-copy">
-<h3>DOWNLOWD <small>(15 тренировок)</small></h3>
-<p><strong>Начали — июль 2025.</strong><br/>700–900 ELO, хотел апнуть 8 уровень, засиделся на одном рейтинге и не мог стабильно влиять на игру.</p>
-<p><strong>Что я сделал:</strong></p>
-<ul>
-<li>Пересадил его с рифлы на AWP.</li>
-<li>Научил дефолтам и дебютам на каждой карте.</li>
-<li>Проработал индивидуальные решения, движение и игру на Faceit.</li>
-</ul>
-<p><strong>Результат:</strong> к октябрю 2025 года он апнул 1530 ELO и выполнил цель.</p>
-</div>
-<div class="case-result">
-<div class="elo-box"><span>до</span><strong>~800</strong><span>ELO</span></div>
-<div class="elo-box"><span>после</span><strong>1530</strong><span>ELO</span></div>
-</div>
-</div>
-</article>
-<article class="case-card reveal">
-<div class="case-media">
-<figure class="case-shot">
-<button aria-label="Открыть изображение «YGENIUS — до обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="YGENIUS — до обучения" data-lightbox-src="./genius-before.jpg" type="button">
-<img alt="Статистика YGENIUS до обучения" decoding="async" fetchpriority="low" height="839" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./genius-before.jpg" width="1080"/>
-<span class="case-zoom">Открыть</span>
-</button>
-<figcaption>До обучения</figcaption>
-</figure>
-<figure class="case-shot">
-<button aria-label="Открыть изображение «YGENIUS — после обучения» в полном размере" class="case-image-button photo-hover" data-lightbox-caption="YGENIUS — после обучения" data-lightbox-src="./genius-after.jpg" type="button">
-<img alt="Статистика YGENIUS после обучения" decoding="async" fetchpriority="low" height="774" loading="eager" onerror="this.onerror=null;this.classList.add('image-load-error');this.alt='Изображение временно недоступно';" referrerpolicy="no-referrer" src="./genius-after.jpg" width="1066"/>
-<span class="case-zoom">Открыть</span>
-</button>
-<figcaption>После обучения</figcaption>
-</figure>
-</div>
-<div class="case-body">
-<div class="case-copy">
-<h3>YGENIUS <small>(10 тренировок)</small></h3>
-<p><strong>Начали — август 2025.</strong><br/>Качели на 1800 ELO: не мог закрепиться выше 2000, хорошие матчи постоянно сменялись провальными.</p>
-<p><strong>Что я сделал:</strong></p>
-<ul>
-<li>Подобрал роль и проработал старты.</li>
-<li>Разобрал ошибки по демкам и подключил совместные игры.</li>
-<li>Объяснил теорию CS, движение по карте и правильную игру на Faceit.</li>
-</ul>
-<p><strong>Результат:</strong> к декабрю 2025 года он закрепился на 2500 ELO с хорошей статистикой.</p>
-</div>
-<div class="case-result">
-<div class="elo-box"><span>до</span><strong>~1800</strong><span>ELO</span></div>
-<div class="elo-box"><span>после</span><strong>2500+</strong><span>ELO</span></div>
-</div>
-</div>
-</article>
-</div>
-</div>
-</section>
-<section class="section" id="chapter-4">
-<div class="container">
-<div class="training-heading reveal">
-<div>
-<span class="training-kicker">От первой диагностики до понятного плана</span>
-<h2 class="section-title">Как проходит обучение</h2>
-</div>
-<p>Не лекция на час, а практическая работа с твоей игрой: находим главную проблему, исправляем её и закрепляем результат.</p>
-</div>
-<div class="training-flow">
-<article class="training-step reveal">
-<span class="training-number">01</span>
-<h3>Определяем цель</h3>
-<p>Фиксируем текущий уровень и понимаем, что именно тормозит рост: стрельба, позиции, тайминги или решения.</p>
-</article>
-<article class="training-step reveal">
-<span class="training-number">02</span>
-<h3>Разбираем игру</h3>
-<p>Смотрим демку, экран или конкретные раунды. Отделяем случайные ошибки от тех, которые повторяются постоянно.</p>
-</article>
-<article class="training-step reveal">
-<span class="training-number">03</span>
-<h3>Показываю решение</h3>
-<p>Объясняю, как действовать в похожих ситуациях: где стоять, когда двигаться, какую дуэль выбирать и почему.</p>
-</article>
-<article class="training-step reveal">
-<span class="training-number">04</span>
-<h3>Закрепляем на практике</h3>
-<p>Играем вместе или разбираем матч вживую на Faceit, Premier или MM. Правки применяются сразу по ходу игры.</p>
-</article>
-<article class="training-step reveal">
-<span class="training-number">05</span>
-<h3>Собираем план</h3>
-<p>После занятия остаются конкретные упражнения и два–три приоритета без перегруза лишней теорией.</p>
-</article>
-<article class="training-step reveal">
-<span class="training-number">06</span>
-<h3>Проверяем прогресс</h3>
-<p>На следующей тренировке смотрим, что уже закрепилось, и корректируем план под новые ошибки и задачи.</p>
-</article>
-</div>
-<div class="training-meta reveal">
-<article class="training-audience"><span>Для кого подходят тренировки</span><strong>Для игроков Faceit от начального уровня до 2800 ELO. Программа подстраивается под текущий рейтинг, роль, повторяющиеся ошибки и цель обучения.</strong></article>
-<article><span>После занятия</span><strong>Запись, правки и следующий шаг</strong></article>
-</div>
-</div>
-</section><section class="section" id="chapter-5">
-<div class="container">
-<h2 class="section-title reveal">Формат и цены</h2>
-<div class="pricing-layout">
-<div>
-<div class="price-grid">
-<article class="price-card reveal">
-<h3>Разовая тренировка</h3>
-<div class="duration">60 минут</div>
-<div class="price">1 500 ₽</div>
-<ul class="list">
-<li>Подойдёт для первого знакомства.</li>
-<li>Разберём проблему по твоему запросу.</li>
-<li>Проверю твою игру на роли.</li>
-<li>Покажу, над чем и как работать.</li>
-</ul>
-</article>
-<article class="price-card reveal">
-<span class="discount">−10%</span>
-<h3>Краткосрочное обучение</h3>
-<div class="duration">4 занятия</div>
-<div class="price">5 400 ₽</div>
-<ul class="list">
-<li>Записи всех занятий.</li>
-<li>Постоянная связь в чате.</li>
-<li>Ответы на вопросы по игре.</li>
-<li>Каждое занятие — 60 минут.</li>
-</ul>
-</article>
-<article class="price-card reveal">
-<span class="discount">−15%</span>
-<h3>Долгосрочное обучение</h3>
-<div class="duration">10 занятий</div>
-<div class="price">12 750 ₽</div>
-<ul class="list">
-<li>Всё из краткосрочного пакета.</li>
-<li>Приоритетная запись.</li>
-<li>Индивидуальные гайды под тебя.</li>
-<li>Каждое занятие — 60 минут.</li>
-</ul>
-</article>
-</div>
-<div class="payment-details reveal">
-<div class="payment-line"><span>Оплата</span><strong>TG-кошелёк / крипта / карта РФ / Boosty</strong></div>
-<div class="payment-line payment-contact"><span>Связь</span><strong>Discord · Телемост · Google Meet</strong></div>
-</div>
-</div>
-<article class="form-card reveal" id="application">
-<h3>Хочешь записаться?</h3>
-<p>Заполни заявку — после нажатия откроется мой чат <strong>@mixertren</strong>, а текст уже будет вставлен в поле сообщения.</p>
-<form id="leadForm">
-<div class="field-grid">
-<div class="field">
-<label for="name">Твой ник</label>
-<input id="name" name="name" placeholder="Например, simple" required="" type="text"/>
-</div>
-<div class="field">
-<label for="elo">Текущее ELO</label>
-<input id="elo" name="elo" placeholder="Например, 1500" required="" type="text"/>
-</div>
-<div class="field field-full">
-<label for="format">Формат</label>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Стрельба</span><span>Тайминги</span><span>Роли</span><span>Демки</span><span>Мышление</span><span>Faceit</span><span>Стрельба</span><span>Тайминги</span><span>Роли</span><span>Демки</span><span>Мышление</span><span>Faceit</span>
+      </div>
+    </div>
 
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="kicker">Опыт в цифрах</span><h2>Не теория.<br><span class="outline-word">Практика.</span></h2></div>
+          <p>5 лет на полупрофессиональном уровне и более 12 000 часов в игре. Передаю только то, что проверено в матчах, турнирах и работе с учениками.</p>
+        </div>
+        <div class="stats-strip reveal">
+          <article class="stat"><span>Пиковое ELO в CS:GO</span><strong>4400</strong></article>
+          <article class="stat"><span>Пиковое ELO в CS2</span><strong>3500</strong></article>
+          <article class="stat"><span>Часов в Counter-Strike</span><strong>12K+</strong></article>
+          <article class="stat"><span>Призовых за один год</span><strong>$4K+</strong></article>
+        </div>
+        <div class="levels">
+          <article class="level-card reveal">
+            <span class="level-index" aria-hidden="true">03</span><span class="level-chip">Начальный уровень</span>
+            <h3>У тебя 3 lvl?</h3>
+            <p>Разберём, почему рейтинг постоянно красный, научимся находить полезные киллы и реально влиять на исход раундов.</p>
+          </article>
+          <article class="level-card reveal">
+            <span class="level-index" aria-hidden="true">10</span><span class="level-chip">Продвинутый уровень</span>
+            <h3>Застрял на 2000 ELO?</h3>
+            <p>Выстроим правильный подход к игре на высоком рейтинге. Ты начнёшь понимать каждое решение и его результат.</p>
+          </article>
+        </div>
+      </div>
+    </section>
 
-<div class="custom-select" data-custom-select="">
-<button aria-expanded="false" aria-haspopup="listbox" class="custom-select-trigger" type="button">
-<span>Выбери формат</span><span aria-hidden="true" class="custom-select-arrow">⌄</span>
-</button>
-<div class="custom-select-menu" hidden="" role="listbox">
-<button data-value="Разовая тренировка — 1500 ₽" role="option" type="button">Разовая тренировка — 1500 ₽</button>
-<button data-value="4 занятия — 5400 ₽" role="option" type="button">4 занятия — 5400 ₽</button>
-<button data-value="10 занятий — 12750 ₽" role="option" type="button">10 занятий — 12750 ₽</button>
-<button data-value="Хочу обсудить формат" role="option" type="button">Хочу обсудить формат</button>
-</div>
-<input id="format" name="format" type="hidden" value=""/>
-</div>
-</div>
-<div class="field field-full">
-<label for="goal">Что хочешь улучшить?</label>
-<textarea id="goal" name="goal" placeholder="Опиши проблему, цель и текущую роль" required=""></textarea>
-</div>
-<div class="field field-full">
-<label for="demo">Добавь ссылку на Faceit / дополнительная информация</label>
-<textarea id="demo" name="demo" placeholder="Ссылка на профиль Faceit или комментарий"></textarea>
-</div>
-</div>
-<div class="inline-actions">
-<button class="button button-primary" type="submit">Отправить в Telegram ↗</button>
-</div>
-<div class="form-status" id="formStatus"></div>
-</form>
-</article>
-</div>
-</div>
-</section>
+    <section class="section" id="proof">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="kicker">Почему мне доверяют</span><h2>Опыт,<br><span class="accent">который видно.</span></h2></div>
+          <p>Играл против сильных команд, выступал на LAN и проходил дистанцию в ESEA Main. Знаю давление соревновательной игры изнутри.</p>
+        </div>
+        <div class="proof-grid">
+          <figure class="proof-photo reveal">
+            <img src="./achievement.jpg" alt="mix3r с призовым чеком на турнире" width="1280" height="960" loading="lazy">
+          </figure>
+          <div class="fact-grid">
+            <article class="fact reveal"><span class="fact-number">01 / ELO</span><p>Пиковые 4400 ELO в CS:GO и 3500 ELO в CS2.</p></article>
+            <article class="fact reveal"><span class="fact-number">02 / LAN</span><p>Матч против команды из топ-40 мира на LAN-ивенте.</p></article>
+            <article class="fact reveal"><span class="fact-number">03 / WIN</span><p>Победа в главном полупрофессиональном турнире России в 2021.</p></article>
+            <article class="fact reveal"><span class="fact-number">04 / EVENT</span><p>Участие в Red Bull Flick LAN в формате 2×2.</p></article>
+            <article class="fact reveal"><span class="fact-number">05 / ESEA</span><p>Четыре сезона в ESEA Main и два выхода в плей-офф.</p></article>
+            <article class="fact reveal"><span class="fact-number">06 / HOURS</span><p>Более 12 000 часов соревновательной практики в CS.</p></article>
+            <article class="fact reveal"><span class="fact-number">07 / COACH</span><p>Два года индивидуальной работы с игроками разных уровней.</p></article>
+            <article class="fact reveal"><span class="fact-number">08 / PRIZE</span><p>Более $4 000 призовых за один соревновательный год.</p></article>
+          </div>
+        </div>
+        <div class="proof-actions reveal">
+          <a class="button" href="https://www.youtube.com/watch?v=A06Lpoe9f9A" target="_blank" rel="noopener">Матч против топ-40 команды <span class="arrow">↗</span></a>
+          <a class="button" href="https://vkvideo.ru/video-174875268_456239466?pl=-174875268_1" target="_blank" rel="noopener">Red Bull Flick LAN <span class="arrow">↗</span></a>
+        </div>
+      </div>
+    </section>
 
-<div aria-label="Авторская отметка" class="creator-note">
-<div class="container"><span>ccorb1</span></div>
-</div>
-</main>
-<div aria-hidden="true" aria-label="Просмотр статистики ученика" aria-modal="true" class="lightbox" id="imageLightbox" role="dialog">
-<button aria-label="Закрыть изображение" class="lightbox-close" id="lightboxClose" type="button">×</button>
-<div class="lightbox-dialog" role="document">
-<div class="lightbox-image-wrap">
-<img alt="" class="lightbox-image" decoding="async" id="lightboxImage" src=""/>
-</div>
-<div class="lightbox-bar">
-<span id="lightboxCaption"></span>
-<a class="lightbox-original" href="#" id="lightboxOriginal" rel="noopener" target="_blank">Открыть оригинал ↗</a>
-</div>
-</div>
-</div>
-<footer>
-<div class="container footer-row">
-<span>© <span id="year"></span> mix3r. Индивидуальное обучение Counter-Strike 2.</span>
-<a href="https://t.me/mixertren" rel="noopener" target="_blank">@mixertren</a>
-<span class="footer-creator">ccorb1</span>
-</div>
-</footer>
-<script>
-(() => {
-  'use strict';
+    <section class="section" id="results">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="kicker">Кейсы учеников</span><h2>Результат<br><span class="outline-word">в цифрах.</span></h2></div>
+          <p>Не обещания, а реальные изменения рейтинга и качества игры. Каждый план собирается под роль, уровень и цель ученика.</p>
+        </div>
+        <div class="cases">
+          <article class="case-card reveal">
+            <div class="case-top">
+              <div class="case-summary">
+                <div><span class="case-person">Кейс 01 · 15 тренировок</span><h3>Downlowd</h3></div>
+                <div class="elo-change">
+                  <div class="elo-value"><span>Старт</span><strong>~800</strong></div><span class="elo-arrow">→</span><div class="elo-value"><span>Результат</span><strong class="accent">1530</strong></div>
+                </div>
+              </div>
+              <div class="case-shots">
+                <figure class="case-shot"><button type="button" data-lightbox-src="./downlowd-before.jpg" data-lightbox-caption="Downlowd — до обучения"><img src="./downlowd-before.jpg" alt="Статистика Downlowd до обучения" width="1150" height="602" loading="lazy"><span class="shot-label">До обучения</span></button></figure>
+                <figure class="case-shot"><button type="button" data-lightbox-src="./downlowd-after.jpg" data-lightbox-caption="Downlowd — после обучения"><img src="./downlowd-after.jpg" alt="Статистика Downlowd после обучения" width="1137" height="752" loading="lazy"><span class="shot-label">После обучения</span></button></figure>
+              </div>
+            </div>
+            <div class="case-body">
+              <div class="case-detail"><span>Точка А</span><p>700–900 ELO. Хотел апнуть 8 уровень, но не мог стабильно влиять на игру.</p></div>
+              <div class="case-detail"><span>Что сделали</span><p>Перешли с рифлы на AWP, выучили дефолты, дебюты и проработали решения.</p></div>
+              <div class="case-detail"><span>Результат</span><p>К октябрю 2025 апнул 1530 ELO и выполнил поставленную цель.</p></div>
+            </div>
+          </article>
 
-  const byId = id => document.getElementById(id);
-  const header = byId('header');
-  const menuButton = byId('menuButton');
-  const navLinks = byId('navLinks');
-  const navAnchors = navLinks ? Array.from(navLinks.querySelectorAll('a')) : [];
-  const sections = Array.from(document.querySelectorAll('main section[id]'));
+          <article class="case-card reveal">
+            <div class="case-top">
+              <div class="case-summary">
+                <div><span class="case-person">Кейс 02 · 10 тренировок</span><h3>Ygenius</h3></div>
+                <div class="elo-change">
+                  <div class="elo-value"><span>Старт</span><strong>~1800</strong></div><span class="elo-arrow">→</span><div class="elo-value"><span>Результат</span><strong class="accent">2500+</strong></div>
+                </div>
+              </div>
+              <div class="case-shots">
+                <figure class="case-shot"><button type="button" data-lightbox-src="./genius-before.jpg" data-lightbox-caption="YGENIUS — до обучения"><img src="./genius-before.jpg" alt="Статистика YGENIUS до обучения" width="1080" height="839" loading="lazy"><span class="shot-label">До обучения</span></button></figure>
+                <figure class="case-shot"><button type="button" data-lightbox-src="./genius-after.jpg" data-lightbox-caption="YGENIUS — после обучения"><img src="./genius-after.jpg" alt="Статистика YGENIUS после обучения" width="1066" height="774" loading="lazy"><span class="shot-label">После обучения</span></button></figure>
+              </div>
+            </div>
+            <div class="case-body">
+              <div class="case-detail"><span>Точка А</span><p>Качели на 1800 ELO: хорошие матчи постоянно сменялись провальными.</p></div>
+              <div class="case-detail"><span>Что сделали</span><p>Подобрали роль, разобрали старты и демки, подключили совместные игры.</p></div>
+              <div class="case-detail"><span>Результат</span><p>К декабрю 2025 закрепился на 2500 ELO с хорошей статистикой.</p></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-  const closeMenu = () => {
-    if (!navLinks || !menuButton) return;
-    navLinks.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-    menuButton.textContent = '☰';
-  };
+    <section class="section" id="process">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="kicker">Как проходит обучение</span><h2>От ошибки<br><span class="accent">к системе.</span></h2></div>
+          <p>Это не лекция на час. Мы работаем с твоей реальной игрой, сразу применяем правки и фиксируем следующий шаг.</p>
+        </div>
+        <div class="process">
+          <article class="step reveal"><span class="step-number">01</span><h3>Определяем цель</h3><p>Фиксируем текущий уровень и находим то, что сильнее всего тормозит рост.</p></article>
+          <article class="step reveal"><span class="step-number">02</span><h3>Разбираем игру</h3><p>Смотрим демку, экран или конкретные раунды и находим повторяющиеся ошибки.</p></article>
+          <article class="step reveal"><span class="step-number">03</span><h3>Показываю решение</h3><p>Разбираем позиции, тайминги, выбор дуэлей и логику каждого действия.</p></article>
+          <article class="step reveal"><span class="step-number">04</span><h3>Закрепляем</h3><p>Применяем правки сразу: в совместной игре или живом разборе матча.</p></article>
+          <article class="step reveal"><span class="step-number">05</span><h3>Собираем план</h3><p>После занятия остаются упражнения и два–три понятных приоритета.</p></article>
+          <article class="step reveal"><span class="step-number">06</span><h3>Проверяем прогресс</h3><p>Смотрим, что закрепилось, и корректируем план под новые задачи.</p></article>
+        </div>
+        <div class="process-footer reveal">
+          <div class="process-note"><span>Для кого подходят тренировки</span><strong>Для игроков до 2800 ELO FACEIT.</strong><p>Подходит и тем, кто только начинает играть рейтинг, и тем, кто уже упёрся в свой потолок. Сначала определяем роль, текущие ошибки и цель, затем разбираем демки, решения, тайминги, движение и игровые ситуации именно твоего уровня.</p></div>
+          <div class="process-note"><span>После занятия</span><strong>Запись, правки и следующий шаг.</strong></div>
+        </div>
+        <div class="learn-head reveal"><span class="kicker">Чему ты научишься</span><h3>Понимать раунд, а не просто реагировать.</h3></div>
+        <div class="learn-grid">
+          <article class="learn-card reveal"><span class="learn-code">Механика</span><h3>Выигрывать дуэли</h3><p>Настроим движение, выходы, постановку прицела и выбор позиции. Ты поймёшь, когда принимать бой, а когда сохранить преимущество.</p></article>
+          <article class="learn-card reveal"><span class="learn-code">Макро</span><h3>Читать карту</h3><p>Разберём тайминги, контроль пространства, ротации и реакцию на информацию. Решения перестанут быть случайными.</p></article>
+          <article class="learn-card reveal"><span class="learn-code">Стабильность</span><h3>Закрывать матчи</h3><p>Научишься управлять экономикой, сохранять влияние в сложных играх и не отдавать преимущество серией необдуманных действий.</p></article>
+        </div>
+      </div>
+    </section>
 
-  const updateNavigation = () => {
-    if (header) header.classList.toggle('scrolled', window.scrollY > 12);
-    if (!sections.length || !navAnchors.length) return;
-    const position = window.scrollY + 120;
-    let current = sections[0].id;
-    sections.forEach(section => {
-      if (position >= section.offsetTop) current = section.id;
-    });
-    navAnchors.forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-    });
-  };
+    <section class="section" id="pricing">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="kicker">Форматы обучения</span><h2>Выбери свой<br><span class="outline-word">темп роста.</span></h2></div>
+          <p>Начни с одной тренировки или возьми системную программу с поддержкой между занятиями.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card reveal">
+            <span class="price-badge">Знакомство</span><h3>Разовая тренировка</h3><span class="duration">1 занятие · 60 минут</span><div class="price">1 500 ₽</div>
+            <ul class="price-list"><li>Разбор проблемы по запросу</li><li>Проверка игры на роли</li><li>Конкретные точки роста</li><li>План самостоятельной работы</li></ul>
+            <a class="button" href="#application" data-format="Разовая тренировка — 1500 ₽">Выбрать формат</a>
+          </article>
+          <article class="price-card featured reveal">
+            <span class="price-badge">Популярный · −10%</span><h3>Краткосрочное обучение</h3><span class="duration">4 занятия · по 60 минут</span><div class="price">5 400 ₽</div>
+            <ul class="price-list"><li>Записи всех занятий</li><li>Постоянная связь в чате</li><li>Ответы на вопросы по игре</li><li>Последовательный план роста</li></ul>
+            <a class="button button-primary" href="#application" data-format="4 занятия — 5400 ₽">Выбрать формат</a>
+          </article>
+          <article class="price-card reveal">
+            <span class="price-badge">Максимум · −15%</span><h3>Долгосрочное обучение</h3><span class="duration">10 занятий · по 60 минут</span><div class="price">12 750 ₽</div>
+            <ul class="price-list"><li>Всё из короткой программы</li><li>Приоритетная запись</li><li>Индивидуальные гайды</li><li>Глубокая работа с привычками</li></ul>
+            <a class="button" href="#application" data-format="10 занятий — 12750 ₽">Выбрать формат</a>
+          </article>
+        </div>
+        <div class="payment reveal"><span>Оплата: <strong>TG-кошелёк · крипта · карта РФ · Boosty</strong></span><span>Связь: <strong>Discord · Телемост · Google Meet</strong></span></div>
+        <div class="faq" id="faq">
+          <div class="faq-intro reveal"><span class="kicker">Перед стартом</span><h3>Частые вопросы</h3><p>Коротко о том, чего ждать от первого занятия и как получить максимум пользы.</p></div>
+          <div class="faq-list reveal">
+            <details class="faq-item"><summary>Гарантируешь рост ELO?</summary><div class="faq-answer"><p>Гарантировать конкретную цифру рейтинга было бы нечестно. Я даю систему решений, упражнения и обратную связь. Результат приходит, когда ты применяешь правки в матчах и выполняешь план между занятиями.</p></div></details>
+            <details class="faq-item"><summary>Какой рейтинг нужен для обучения?</summary><div class="faq-answer"><p>Можно приходить с начального уровня и вплоть до 2800 ELO Faceit. Сложность материала подстраивается под твой опыт: новичка не перегружаю продвинутой теорией, а сильного игрока не заставляю повторять очевидную базу.</p></div></details>
+            <details class="faq-item"><summary>Что подготовить к первому занятию?</summary><div class="faq-answer"><p>Текущее ELO, основную роль, ссылку на Faceit, одну–две показательные демки и конкретную цель. На старте определим главную проблему и выберем приоритет, который даст самый заметный эффект.</p></div></details>
+            <details class="faq-item"><summary>Что входит в тренировку?</summary><div class="faq-answer"><p>Разбор реальной игры, объяснение логики решений, практические правки и понятный следующий шаг. В пакетах остаются записи занятий и связь в чате для вопросов по ситуациям из матчей.</p></div></details>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  window.addEventListener('scroll', updateNavigation, { passive: true });
-  updateNavigation();
+    <section class="section" id="application">
+      <div class="container">
+        <div class="application reveal">
+          <div class="application-copy"><span class="kicker">Твой следующий ранг</span><h2>Готов<br>начать?</h2><p>Заполни короткую заявку. После отправки откроется чат <strong>@mixertren</strong> с уже готовым сообщением.</p></div>
+          <form class="application-form" id="leadForm">
+            <div class="field-grid">
+              <div class="field"><label for="name">Твой ник</label><input id="name" name="name" placeholder="Например, simple" autocomplete="nickname" required></div>
+              <div class="field"><label for="elo">Текущее ELO</label><input id="elo" name="elo" placeholder="Например, 1500" inputmode="numeric" required></div>
+              <div class="field field-full"><label for="format">Формат</label><select id="format" name="format" required><option value="" selected disabled>Выбери формат обучения</option><option>Разовая тренировка — 1500 ₽</option><option>4 занятия — 5400 ₽</option><option>10 занятий — 12750 ₽</option><option>Хочу обсудить формат</option></select></div>
+              <div class="field field-full"><label for="goal">Что хочешь улучшить?</label><textarea id="goal" name="goal" placeholder="Опиши проблему, цель и текущую роль" required></textarea></div>
+              <div class="field field-full"><label for="demo">Faceit / дополнительная информация</label><textarea id="demo" name="demo" placeholder="Ссылка на профиль или важный комментарий"></textarea></div>
+            </div>
+            <div class="form-footer"><button class="button button-primary" type="submit">Отправить в Telegram <span class="arrow">↗</span></button><div class="form-status" id="formStatus" role="status" aria-live="polite"></div></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
 
-  if (menuButton && navLinks) {
-    menuButton.addEventListener('click', () => {
-      const open = navLinks.classList.toggle('open');
-      menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.textContent = open ? '✕' : '☰';
-    });
-    navAnchors.forEach(link => link.addEventListener('click', closeMenu));
-  }
+  <div class="lightbox" id="imageLightbox" role="dialog" aria-modal="true" aria-label="Просмотр статистики ученика" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Закрыть изображение">×</button>
+    <div class="lightbox-dialog"><div class="lightbox-image-wrap"><img class="lightbox-image" id="lightboxImage" src="" alt=""></div><div class="lightbox-bar"><span id="lightboxCaption"></span><a class="lightbox-original" id="lightboxOriginal" href="#" target="_blank" rel="noopener">Открыть оригинал ↗</a></div></div>
+  </div>
 
-  // Content remains visible if IntersectionObserver is unavailable or JS fails.
-  const revealElements = Array.from(document.querySelectorAll('.reveal'));
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    revealElements.forEach(element => element.classList.add('reveal-pending'));
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+  <a class="telegram-float" href="https://t.me/mixertren" target="_blank" rel="noopener" aria-label="Написать mix3r в Telegram">↗</a>
+  <footer class="footer"><div class="container footer-row"><a class="footer-brand" href="#top">MIX3R</a><span>© <span id="year"></span> · Индивидуальное обучение Counter-Strike 2</span><a href="https://t.me/mixertren" target="_blank" rel="noopener">@mixertren ↗</a></div></footer>
+
+  <script>
+    (() => {
+      'use strict';
+      const $ = (selector, scope = document) => scope.querySelector(selector);
+      const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+      const header = $('#header');
+      const progress = $('#progress');
+      const nav = $('#navLinks');
+      const menuButton = $('#menuButton');
+      const navLinks = $$('#navLinks a');
+      const sections = $$('main section[id]');
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const closeMenu = () => {
+        nav.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+        menuButton.textContent = '☰';
+      };
+
+      const onScroll = () => {
+        const max = document.documentElement.scrollHeight - innerHeight;
+        progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+        header.classList.toggle('scrolled', scrollY > 12);
+        let active = '';
+        sections.forEach(section => { if (scrollY + 150 >= section.offsetTop) active = section.id; });
+        navLinks.forEach(link => link.classList.toggle('active', link.hash === `#${active}`));
+      };
+
+      addEventListener('scroll', onScroll, { passive: true });
+      addEventListener('resize', onScroll, { passive: true });
+      onScroll();
+
+      menuButton.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        menuButton.setAttribute('aria-expanded', String(open));
+        menuButton.textContent = open ? '×' : '☰';
       });
-    }, { threshold: 0.08, rootMargin: '80px 0px' });
-    revealElements.forEach(element => observer.observe(element));
-  }
+      navLinks.forEach(link => link.addEventListener('click', closeMenu));
 
-
-  const applyTypoFixes = () => {
-    const selectors = ['.lead', '.level-path-intro', '.level-copy p', '.fact span:last-child', '.case-copy p', '.case-copy li', '.list li', '.training-heading p', '.training-step p', '.training-meta strong', '.payment-line strong', '.form-card p'];
-    const re = /(^|[\s ])(а|и|к|с|у|о|в|на|но|из|за|от|до|по|об|без|для|над|под|при|про|не|со)(\s+)/gi;
-    selectors.forEach(selector => {
-      document.querySelectorAll(selector).forEach(element => {
-        element.innerHTML = element.innerHTML.replace(re, (m, p1, p2) => `${p1}${p2}&nbsp;`);
-      });
-    });
-  };
-  applyTypoFixes();
-
-  const year = byId('year');
-  if (year) year.textContent = String(new Date().getFullYear());
-
-  const lightbox = byId('imageLightbox');
-  const lightboxImage = byId('lightboxImage');
-  const lightboxCaption = byId('lightboxCaption');
-  const lightboxOriginal = byId('lightboxOriginal');
-  const lightboxClose = byId('lightboxClose');
-  let lastLightboxTrigger = null;
-
-  const closeLightbox = () => {
-    if (!lightbox || !lightbox.classList.contains('open')) return;
-    lightbox.classList.remove('open');
-    lightbox.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('lightbox-lock');
-    if (lightboxImage) lightboxImage.removeAttribute('src');
-    if (lastLightboxTrigger && typeof lastLightboxTrigger.focus === 'function') lastLightboxTrigger.focus();
-  };
-
-  const openLightbox = trigger => {
-    if (!lightbox || !lightboxImage || !lightboxCaption || !lightboxOriginal) return;
-    const src = trigger.getAttribute('data-lightbox-src');
-    if (!src) return;
-    const nestedImage = trigger.querySelector('img');
-    const caption = trigger.getAttribute('data-lightbox-caption') || (nestedImage ? nestedImage.alt : '') || 'Изображение';
-    lastLightboxTrigger = trigger;
-    lightboxImage.src = src;
-    lightboxImage.alt = caption;
-    lightboxCaption.textContent = caption;
-    lightboxOriginal.href = src;
-    lightbox.classList.add('open');
-    lightbox.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('lightbox-lock');
-    if (lightboxClose) lightboxClose.focus();
-  };
-
-  document.querySelectorAll('[data-lightbox-src]').forEach(trigger => {
-    trigger.addEventListener('click', () => openLightbox(trigger));
-  });
-  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-  if (lightbox) lightbox.addEventListener('click', event => {
-    if (event.target === lightbox) closeLightbox();
-  });
-
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      closeMenu();
-      closeLightbox();
-    }
-  });
-
-
-  const customSelect = document.querySelector('[data-custom-select]');
-  if (customSelect) {
-    const trigger = customSelect.querySelector('.custom-select-trigger');
-    const triggerLabel = trigger ? trigger.querySelector('span') : null;
-    const menu = customSelect.querySelector('.custom-select-menu');
-    const input = customSelect.querySelector('input[name="format"]');
-    const options = menu ? Array.from(menu.querySelectorAll('[data-value]')) : [];
-
-    const closeCustomSelect = () => {
-      customSelect.classList.remove('open');
-      if (trigger) trigger.setAttribute('aria-expanded', 'false');
-      if (menu) menu.hidden = true;
-    };
-
-    const openCustomSelect = () => {
-      customSelect.classList.add('open');
-      if (trigger) trigger.setAttribute('aria-expanded', 'true');
-      if (menu) menu.hidden = false;
-    };
-
-    if (trigger) {
-      trigger.addEventListener('click', () => {
-        customSelect.classList.contains('open') ? closeCustomSelect() : openCustomSelect();
-      });
-    }
-
-    options.forEach(option => {
-      option.addEventListener('click', () => {
-        const value = option.getAttribute('data-value') || option.textContent.trim();
-        if (input) input.value = value;
-        if (triggerLabel) triggerLabel.textContent = value;
-        options.forEach(item => item.setAttribute('aria-selected', String(item === option)));
-        closeCustomSelect();
-        if (trigger) trigger.focus();
-      });
-    });
-
-    document.addEventListener('click', event => {
-      if (!customSelect.contains(event.target)) closeCustomSelect();
-    });
-  }
-
-  const form = byId('leadForm');
-  const formStatus = byId('formStatus');
-  if (form) {
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      if (typeof form.reportValidity === 'function' && !form.reportValidity()) return;
-      const data = new FormData(form);
-      const value = name => String(data.get(name) || '').trim();
-      if (!value('format')) {
-        if (formStatus) formStatus.textContent = 'Выбери формат тренировки.';
-        const formatTrigger = document.querySelector('.custom-select-trigger');
-        if (formatTrigger) formatTrigger.focus();
-        return;
+      if (!reduceMotion && 'IntersectionObserver' in window) {
+        const items = $$('.reveal');
+        items.forEach(item => item.classList.add('pending'));
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: .08, rootMargin: '60px 0px' });
+        items.forEach(item => observer.observe(item));
       }
-      const message = [
-        'Привет! Хочу записаться на тренировку.',
-        '',
-        'Ник: ' + value('name'),
-        'Текущее ELO: ' + value('elo'),
-        'Формат: ' + value('format'),
-        'Что хочу улучшить: ' + value('goal'),
-        'Faceit / дополнительная информация: ' + (value('demo') || '—')
-      ].join('\n');
-      if (formStatus) formStatus.textContent = 'Открываю чат @mixertren с готовым сообщением…';
-      window.location.assign('https://t.me/mixertren?text=' + encodeURIComponent(message));
-    });
-  }
-})();
-</script>
+
+      if (!reduceMotion && matchMedia('(pointer:fine)').matches) {
+        let frame = 0;
+        addEventListener('pointermove', event => {
+          cancelAnimationFrame(frame);
+          frame = requestAnimationFrame(() => {
+            document.documentElement.style.setProperty('--mx', `${event.clientX}px`);
+            document.documentElement.style.setProperty('--my', `${event.clientY}px`);
+          });
+        }, { passive: true });
+      }
+
+      const lightbox = $('#imageLightbox');
+      const lightboxImage = $('#lightboxImage');
+      const lightboxCaption = $('#lightboxCaption');
+      const lightboxOriginal = $('#lightboxOriginal');
+      const lightboxClose = $('#lightboxClose');
+      let lastTrigger = null;
+
+      const closeLightbox = () => {
+        if (!lightbox.classList.contains('open')) return;
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-lock');
+        lightboxImage.removeAttribute('src');
+        if (lastTrigger) lastTrigger.focus();
+      };
+
+      $$('[data-lightbox-src]').forEach(button => button.addEventListener('click', () => {
+        const src = button.dataset.lightboxSrc;
+        const caption = button.dataset.lightboxCaption || 'Статистика ученика';
+        lastTrigger = button;
+        lightboxImage.src = src;
+        lightboxImage.alt = caption;
+        lightboxCaption.textContent = caption;
+        lightboxOriginal.href = src;
+        lightbox.classList.add('open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-lock');
+        lightboxClose.focus();
+      }));
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', event => { if (event.target === lightbox) closeLightbox(); });
+      addEventListener('keydown', event => { if (event.key === 'Escape') { closeMenu(); closeLightbox(); } });
+
+      const format = $('#format');
+      $$('[data-format]').forEach(link => link.addEventListener('click', () => { format.value = link.dataset.format; }));
+
+      $('#leadForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        if (!form.reportValidity()) return;
+        const data = new FormData(form);
+        const value = name => String(data.get(name) || '').trim();
+        const message = [
+          'Привет! Хочу записаться на тренировку.', '',
+          `Ник: ${value('name')}`,
+          `Текущее ELO: ${value('elo')}`,
+          `Формат: ${value('format')}`,
+          `Что хочу улучшить: ${value('goal')}`,
+          `Faceit / дополнительная информация: ${value('demo') || '—'}`
+        ].join('\n');
+        $('#formStatus').textContent = 'Открываю Telegram…';
+        location.assign(`https://t.me/mixertren?text=${encodeURIComponent(message)}`);
+      });
+
+      $('#year').textContent = new Date().getFullYear();
+    })();
+  </script>
 </body>
 </html>
